@@ -14,6 +14,7 @@ import {Optional} from '../../util/ts/Optional';
 import {Points} from '../../Points';
 import {DocFormatFactory} from '../../docformat/DocFormatFactory';
 import {HighlightCreatedEvent} from '../../comments/react/HighlightCreatedEvent';
+import {MouseDirection} from '../popup/Popup';
 
 const log = Logger.create();
 
@@ -83,7 +84,8 @@ export class ControlledAnnotationBars {
 
     private static computePosition(pageElement: HTMLElement,
                                    point: Point,
-                                   offset: Point | undefined): Point {
+                                   offset: Point | undefined,
+                                   mouseDirection: MouseDirection): Point {
 
         const docFormat = DocFormatFactory.getInstance();
 
@@ -91,7 +93,7 @@ export class ControlledAnnotationBars {
             Optional.of(pageElement.getBoundingClientRect())
                 .map(rect => {
                     return {'x': rect.left, 'y': rect.top};
-                })
+               })
                 .get();
 
         // one off for the html viewer... I hope we can unify these one day.
@@ -104,13 +106,10 @@ export class ControlledAnnotationBars {
 
         offset = offset || {x: 0, y: 0};
 
-        const left = relativePoint.x + offset.x;
-        const top = relativePoint.y + offset.y;
+        const x = relativePoint.x + offset.x;
+        const y = relativePoint.y + offset.y;
 
-        return {
-            x: left,
-            y: top
-        };
+        return { x, y };
 
     }
 
@@ -129,22 +128,35 @@ export class ControlledAnnotationBars {
             y: -50
         };
 
-
         // TODO use the mouseDirection on the activeSelectionEvent and place
         // with top/bottom
 
         // TODO: we have to compute the position above or below based on the
         // direction of the mouse movement.
 
-        const position = this.computePosition(pageElement, point, offset);
+        let position = this.computePosition(pageElement, point, offset, activeSelectionEvent.mouseDirection);
+
+        console.log("FIXME: activeSelectionEvent.boundingClientRect: ", JSON.stringify(activeSelectionEvent.boundingClientRect, null, "  "));
+        console.log("FIXME: point: ", JSON.stringify(point, null, "  "));
+        console.log("FIXME: position before: ", JSON.stringify(position, null, "  "));
+
+
+        // FIXME: in theory we can j ust adjust by the height to position it at
+        // the botom but the height seems wrong..
+        position = {...position, y: position.y + activeSelectionEvent.boundingClientRect.height};
+
+        console.log("FIXME: position after: ", JSON.stringify(position, null, "  "));
 
         const annotationBar = document.createElement('div');
 
         annotationBar.addEventListener('mouseup', (event) => event.stopPropagation());
         annotationBar.addEventListener('mousedown', (event) => event.stopPropagation());
 
-        const style = `position: absolute; top: ${position.y}px; left: ${position.x}px; z-index: 10000;`;
-        annotationBar.setAttribute('style', style);
+        annotationBar.style.position = 'absolute';
+        annotationBar.style.zIndex = '10000';
+
+        annotationBar.style.top = `${position.y}px`;
+        annotationBar.style.left = `${position.x}px`;
 
         pageElement.insertBefore(annotationBar, pageElement.firstChild);
 
