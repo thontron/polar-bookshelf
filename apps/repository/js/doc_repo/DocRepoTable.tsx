@@ -40,7 +40,7 @@ import {DocButton} from './doc_buttons/DocButton';
 import {FlagDocButton} from './doc_buttons/FlagDocButton';
 import {ArchiveDocButton} from './doc_buttons/ArchiveDocButton';
 import {MultiDeleteButton} from './multi_buttons/MultiDeleteButton';
-import {DocRepoFilterBar} from './DocRepoFilterBar';
+import {FilterBar} from '../FilterBar';
 import {FilteredRepoDocInfoIndex, RefreshedCallback} from './FilteredRepoDocInfoIndex';
 import {AppRuntime} from '../../../../web/js/AppRuntime';
 import {Toaster} from '../../../../web/js/ui/toaster/Toaster';
@@ -341,13 +341,13 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                             <div style={{marginLeft: 'auto'}}>
 
-                                <DocRepoFilterBar onToggleFlaggedOnly={value => this.onToggleFlaggedOnly(value)}
-                                                  onToggleFilterArchived={value => this.onToggleFilterArchived(value)}
-                                                  onFilterByTitle={(title) => this.onFilterByTitle(title)}
-                                                  tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}
-                                                  refresher={() => this.refresh()}
-                                                  filteredTags={this.filteredRepoDocInfoIndex.filters.filteredTags}
-                                                  right={
+                                <FilterBar onToggleFlaggedOnly={value => this.onToggleFlaggedOnly(value)}
+                                           onToggleFilterArchived={value => this.onToggleFilterArchived(value)}
+                                           onFilterByTitle={(title) => this.onFilterByTitle(title)}
+                                           tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}
+                                           refresher={() => this.refresh()}
+                                           filteredTags={this.filteredRepoDocInfoIndex.filters.filteredTags}
+                                           right={
                                                <div className=""
                                                     style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto'}}>
 

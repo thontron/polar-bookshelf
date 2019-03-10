@@ -17,6 +17,9 @@ import {SplitBar, SplitBarLeft, SplitBarRight} from '../SplitBar';
 import {RepoSidebar} from '../RepoSidebar';
 import {CloudAuthButton} from '../../../../web/js/ui/cloud_auth/CloudAuthButton';
 import {FixedNav, FixedNavBody} from '../FixedNav';
+import {FilterBar} from '../FilterBar';
+import {DocRepoTableDropdown} from '../doc_repo/DocRepoTableDropdown';
+import {NULL_FUNCTION} from '../../../../web/js/util/Functions';
 
 const log = Logger.create();
 
@@ -49,9 +52,36 @@ export default class AnnotationRepoApp extends React.Component<IProps, IState> {
             <FixedNav id="doc-repository" className="annotations-view">
 
                 <header>
-                    <RepoHeader persistenceLayerManager={this.props.persistenceLayerManager}/>
 
-                    <MessageBanner/>
+                    <div style={{display: 'flex'}}>
+
+
+                        <RepoHeader persistenceLayerManager={this.props.persistenceLayerManager}/>
+
+
+                        <div style={{marginLeft: 'auto'}}>
+
+                            {/*FIXME: I can make FilteredRepoDocInfoIndex generic and provide my own*/}
+                            {/*provider and filter functions.   This would really just be an object
+                            keeping track of of the filter object and then handing it to our own
+                            provider and filter objects. It's kind of like a stream setup.*/}
+
+                            {/*<FilterBar onToggleFlaggedOnly={value => NULL_FUNCTION}*/}
+                                       {/*onToggleFilterArchived={value => NULL_FUNCTION}*/}
+                                       {/*onFilterByTitle={(title) => NULL_FUNCTION}*/}
+                                       {/*tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}*/}
+                                       {/*refresher={() => NULL_FUNCTION}*/}
+                                       {/*filteredTags={this.filteredRepoDocInfoIndex.filters.filteredTags}*/}
+                            {/*/>*/}
+
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <MessageBanner/>
+                    </div>
+
                 </header>
 
                 <FixedNavBody>
