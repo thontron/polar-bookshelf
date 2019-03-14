@@ -1,5 +1,6 @@
 import {Dictionaries} from "../../util/Dictionaries";
 import {Arrays} from "../../util/Arrays";
+import {DocID} from "../../datastore/Datastore";
 
 /**
  * Related tag index for in memory related tags computation.  This does not
@@ -122,8 +123,6 @@ export interface TagHit {
     hits: number;
 
 }
-
-export type DocID = string;
 
 /**
  * A literal tag value as a string.

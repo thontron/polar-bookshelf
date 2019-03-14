@@ -1,4 +1,3 @@
-import {ListenablePersistenceLayer} from '../../../web/js/datastore/ListenablePersistenceLayer';
 import {Logger} from '../../../web/js/logger/Logger';
 import {DocInfo, IDocInfo} from '../../../web/js/metadata/DocInfo';
 import {RepoDocInfo} from './RepoDocInfo';
@@ -11,7 +10,6 @@ import {Optional} from '../../../web/js/util/ts/Optional';
 import {DocMetaFileRefs} from '../../../web/js/datastore/DocMetaRef';
 import {PersistenceLayer} from '../../../web/js/datastore/PersistenceLayer';
 import {IProvider} from '../../../web/js/util/Providers';
-import {DocMeta} from '../../../web/js/metadata/DocMeta';
 import {RepoAnnotation} from './RepoAnnotation';
 import {RepoDocMeta} from './RepoDocMeta';
 import {RelatedTags} from '../../../web/js/tags/related/RelatedTags';
@@ -48,7 +46,7 @@ export class RepoDocMetaManager {
         if (repoDocMeta) {
 
             this.repoDocInfoIndex[fingerprint] = repoDocMeta.repoDocInfo;
-            this.updateTagsDB(repoDocMeta.repoDocInfo);
+            this.registerWithTagsDB(repoDocMeta.repoDocInfo);
 
             this.relatedTags.update(fingerprint, 'set', ...Object.values(repoDocMeta.repoDocInfo.tags || {})
                                                                  .map(current => current.label));
@@ -71,14 +69,14 @@ export class RepoDocMetaManager {
 
         if (repoDocInfo) {
             this.repoDocInfoIndex[fingerprint] = repoDocInfo;
-            this.updateTagsDB(repoDocInfo);
+            this.registerWithTagsDB(repoDocInfo);
         } else {
             delete this.repoDocInfoIndex[fingerprint];
         }
 
     }
 
-    private updateTagsDB(...repoDocInfos: RepoDocInfo[]) {
+    private registerWithTagsDB(...repoDocInfos: RepoDocInfo[]) {
 
         for (const repoDocInfo of repoDocInfos) {
 
@@ -86,6 +84,20 @@ export class RepoDocMetaManager {
             Optional.of(repoDocInfo.docInfo.tags)
                 .map(tags => {
                     this.tagsDB.register(...Object.values(tags));
+                });
+
+        }
+
+    }
+
+    private unregisterWithTagsDB(...repoDocInfos: RepoDocInfo[]) {
+
+        for (const repoDocInfo of repoDocInfos) {
+
+            // update the tags data.
+            Optional.of(repoDocInfo.docInfo.tags)
+                .map(tags => {
+                    this.tagsDB.unregister(...Object.values(tags));
                 });
 
         }
@@ -174,7 +186,7 @@ export class RepoDocMetaManager {
         // FIXME: is this even needed anymore?
 
         for (const repoDocInfo of Object.values(this.repoDocInfoIndex)) {
-            this.updateTagsDB(repoDocInfo);
+            this.registerWithTagsDB(repoDocInfo);
         }
 
     }
