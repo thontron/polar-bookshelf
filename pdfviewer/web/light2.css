@@ -1,0 +1,36 @@
+/*experiment with using a light mode CSS viewer*/
+
+body,
+#polar-header {
+    background: #ffffff none;
+    color: #000000;
+}
+
+/*#toolbarContainer,*/
+/*.findbar,*/
+/*.secondaryToolbar {*/
+    /*background: #ffffff none;*/
+    /*color: #000000;*/
+
+/*}*/
+
+.toolbarButton {
+}
+
+#sidebarContainer #toolbarSidebar,
+#toolbarContainer {
+    filter: invert(100%);
+    background: #000000 none;
+}
+
+#sidebarContainer .thumbnail * {
+    /*filter: invert(0%);*/
+    /*background: #ffffff none;*/
+}
+
+.pdfViewer .page {
+    /*border-image-filter: invert(100%);*/
+    border: none;
+    background-color: #c6c6c6;
+    margin: 9px;
+}
