@@ -56,3 +56,11 @@ body,
     border-bottom-style: solid !important;;
     border-bottom-width: 1px !important;
 }
+
+#toolbar {
+    background-color: white;
+}
+
+#viewer {
+    background-color: #c6c6c6;
+}
