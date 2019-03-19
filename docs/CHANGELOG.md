@@ -1,5 +1,21 @@
+# 1.13.14
+
+- Fixed bug in FF with the webapp no longer working.
+
+- Now running latest version of pdf.js (from dec)
+
+- flashcards can now be edited properly
+
+- flashcards and comments are now in ascending order not descending
 
 # 1.13.13
+
+- sidebar and viewer properly resized now
+
+- Comments can now be edited, not just viewed. 
+
+- The DiskDatastore now performs more atomic operations when working with state 
+  files for more reliable operations.
 
 - Webapp users now properly get a default set of documents.
 

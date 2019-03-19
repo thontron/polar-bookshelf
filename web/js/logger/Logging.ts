@@ -92,10 +92,10 @@ export class Logging {
 
         // *** next up is the Toaster Logger to visually show errors.
 
-        if (['electron-renderer', 'browser'].includes(AppRuntime.get())) {
+        if (['electron-renderer'].includes(AppRuntime.get())) {
             // use a ToasterLogger when running in the renderer context so that
             // we can bring up error messages for the user.
-            // loggers.push(new ToasterLogger());
+            loggers.push(new ToasterLogger());
         }
 
         if (electronContext === ElectronContextType.RENDERER) {

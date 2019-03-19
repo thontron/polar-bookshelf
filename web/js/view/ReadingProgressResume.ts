@@ -7,7 +7,11 @@ import {Reducers} from '../util/Reducers';
 
 export class ReadingProgressResume {
 
-    public static resume(docMeta: DocMeta) {
+    private static resume(docMeta: DocMeta) {
+        setTimeout(() => this.doResume(docMeta), 1);
+    }
+
+    private static doResume(docMeta: DocMeta) {
 
         const targetPagemark = this.computeTargetPagemark(docMeta);
 
@@ -75,12 +79,21 @@ export class ReadingProgressResume {
 
         const newScrollTop = Math.floor(pageTop + pagemarkHeight - windowDelta);
 
-        setTimeout(() => {
-            // the latest pdf.js seems to need this to happen in the background.
-            scrollParent.scrollTop = newScrollTop;
-        }, 1);
+        scrollParent.scrollTop = newScrollTop;
 
         return true;
+
+    }
+
+    private static pdfjsVersion() {
+
+        const win = (<any> window);
+
+        if (win && win.pdfjsLib) {
+            return (win.pdfjsLib.version);
+        }
+
+        return undefined;
 
     }
 

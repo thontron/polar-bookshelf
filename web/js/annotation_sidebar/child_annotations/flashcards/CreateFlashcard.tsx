@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {EditComment} from "./EditComment";
 import {CancelButton} from "../CancelButton";
 import {NullCollapse} from "../../../ui/null_collapse/NullCollapse";
+import {FlashcardInput} from './flashcard_input/FlashcardInput';
+import {FlashcardCallback} from './flashcard_input/FlashcardInput';
 
-export class CreateComment extends React.PureComponent<IProps, IState> {
+export class CreateFlashcard extends React.PureComponent<IProps, IState> {
 
     constructor(props: IProps, context: any) {
         super(props, context);
@@ -22,24 +23,33 @@ export class CreateComment extends React.PureComponent<IProps, IState> {
 
         return <NullCollapse open={this.props.active}>
 
-            <EditComment id={'edit-comment-for' + this.props.id}
-                         onComment={(html) => this.props.onComment(html)}
-                         cancelButton={cancelButton}/>
+            <FlashcardInput id={'edit-flashcard-for' + this.props.id}
+                            onFlashcard={this.props.onFlashcardCreated}
+                            cancelButton={cancelButton}/>
 
         </NullCollapse>;
 
     }
 
     private onCancel() {
-        this.props.onCancel();
+
+        if (this.props.onCancel) {
+            this.props.onCancel();
+        }
+
     }
 
 }
 interface IProps {
+
     readonly id: string;
+
     readonly active: boolean;
-    readonly onComment: (html: string) => void;
-    readonly onCancel: () => void;
+
+    readonly onFlashcardCreated: FlashcardCallback;
+
+    readonly onCancel?: () => void;
+
 }
 
 interface IState {
