@@ -92,7 +92,8 @@ export class RepoAnnotations {
             created: sourceAnnotation.created,
             tags: docInfo.tags || {},
             meta,
-            docInfo
+            docInfo,
+            original: sourceAnnotation
         };
 
     }

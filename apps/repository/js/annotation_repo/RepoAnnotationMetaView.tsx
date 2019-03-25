@@ -9,6 +9,7 @@ import {FormattedTags} from '../FormattedTags';
 import {Logger} from '../../../../web/js/logger/Logger';
 import {SynchronizingDocLoader} from '../util/SynchronizingDocLoader';
 import Button from 'reactstrap/lib/Button';
+import {ChildAnnotationSection} from '../../../../web/js/annotation_sidebar/child_annotations/ChildAnnotationSection';
 
 const log = Logger.create();
 
@@ -157,6 +158,13 @@ export class RepoAnnotationMetaView extends React.Component<IProps, IState> {
                     <div style={Styles.annotationText}>
                         {repoAnnotation.text}
                     </div>
+
+                    {/*FIXME: use the proper display control that we're using in
+                    */} {/*the sidebar now... and I can use
+                    ChildAnnotationSection for this.*/}
+                    <ChildAnnotationSection docMeta={this.props.docMeta}
+                                            parent={repoAnnotation}
+                                            children={annotation.children}/>
 
                 </div>
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {DocAnnotation} from '../DocAnnotation';
 import {AnnotationType} from '../../metadata/AnnotationType';
-import {ViewFlashcard} from './flashcards/ViewFlashcard';
 import {ViewOrEditComment} from "./comments/ViewOrEditComment";
 import {CommentActions} from "./comments/CommentActions";
 import {DocMeta} from "../../metadata/DocMeta";
@@ -43,6 +42,7 @@ export class ChildAnnotationSection extends React.Component<IProps, IState> {
                 result.push (<ViewOrEditComment key={child.id}
                                                 id={child.id}
                                                 onComment={(html, existingComment) => this.onComment(html, existingComment)}
+                                                viewOnly={this.props.viewOnly}
                                                 comment={child}/>);
 
             } else {
@@ -77,6 +77,7 @@ interface IProps {
 
     readonly children: DocAnnotation[];
 
+    readonly viewOnly?: boolean;
 }
 
 interface IState {

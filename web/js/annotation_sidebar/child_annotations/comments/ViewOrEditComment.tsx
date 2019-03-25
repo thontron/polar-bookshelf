@@ -33,7 +33,8 @@ export class ViewOrEditComment extends React.Component<IProps, IState> {
         if (this.state.mode === 'view') {
 
             return <ViewComment comment={this.props.comment}
-                                editButton={editButton}/>;
+                                editButton={editButton}
+                                viewOnly={this.props.viewOnly}/>;
 
         } else {
             return <EditComment id={'edit-comment-for' + this.props.id}
@@ -57,6 +58,7 @@ interface IProps {
     readonly id: string;
     readonly comment: DocAnnotation;
     readonly onComment: (html: string, existingComment: Comment) => void;
+    readonly viewOnly?: boolean;
 }
 
 interface IState {

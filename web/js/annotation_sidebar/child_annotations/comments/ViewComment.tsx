@@ -5,6 +5,7 @@ import {CommentDropdown} from '../CommentDropdown';
 import {Logger} from '../../../logger/Logger';
 import {IStyleMap} from '../../../react/IStyleMap';
 import {Comment} from '../../../metadata/Comment';
+import {NullCollapse} from '../../../ui/null_collapse/NullCollapse';
 
 const log = Logger.create();
 
@@ -68,13 +69,17 @@ export class ViewComment extends React.Component<IProps, IState> {
 
                         <div style={Styles.barChild} className="flexbar-right">
 
-                            {this.props.editButton}
+                            <NullCollapse open={! this.props.viewOnly}>
 
-                            <div className="ml-1">
-                                <CommentDropdown id={'comment-dropdown-' + comment.id}
-                                                 comment={comment}
-                                                 onDelete={() => this.onDelete(comment)}/>
-                            </div>
+                                {this.props.editButton}
+
+                                <div className="ml-1">
+                                    <CommentDropdown id={'comment-dropdown-' + comment.id}
+                                                     comment={comment}
+                                                     onDelete={() => this.onDelete(comment)}/>
+                                </div>
+                            </NullCollapse>
+
 
                         </div>
 
@@ -96,6 +101,7 @@ export class ViewComment extends React.Component<IProps, IState> {
 interface IProps {
     readonly comment: DocAnnotation;
     readonly editButton: JSX.Element;
+    readonly viewOnly?: boolean;
 }
 
 interface IState {

@@ -8,6 +8,10 @@ import {Tag} from '../../../web/js/tags/Tag';
 import {Hashcode} from '../../../web/js/metadata/Hashcode';
 import {AnnotationType} from '../../../web/js/metadata/AnnotationType';
 import {HighlightColor} from '../../../web/js/metadata/BaseHighlight';
+import {TextHighlight} from '../../../web/js/metadata/TextHighlight';
+import {AreaHighlight} from '../../../web/js/metadata/AreaHighlight';
+import {Comment} from '../../../web/js/metadata/Comment';
+import {Flashcard} from '../../../web/js/metadata/Flashcard';
 
 // FIXME: a lot of duplication here between DocAnnotations DocAnnotation
 
@@ -37,6 +41,8 @@ export interface RepoAnnotation {
      * The original DocInfo used to construct this RepoDocInfo.
      */
     docInfo: IDocInfo;
+
+    readonly original: TextHighlight | AreaHighlight | Comment | Flashcard;
 
 }
 
