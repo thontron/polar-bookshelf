@@ -2,6 +2,7 @@
  * Simple logger that just writes to the console.
  */
 import {ILogger} from '../ILogger';
+import {ErrorLike} from '../ILogger';
 
 /**
  * Annotates log calls with the level.  Helpful when the target is the
@@ -29,8 +30,8 @@ export class LevelAnnotatingLogger implements ILogger {
         this.delegate.warn(`[warn] ${msg}`, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.delegate.error(`[error] ${msg}`, ...args);
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.delegate.error(`[error] ${msg}`, err, arg0, arg1, arg2);
     }
 
     public verbose(msg: string, ...args: any[]) {

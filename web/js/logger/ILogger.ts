@@ -15,7 +15,7 @@ export interface ILogger {
      */
     notice(msg: string, ...args: any[]): void;
 
-    error(msg: string, ...args: any[]): void;
+    error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any): void;
 
     warn(msg: string, ...args: any[]): void;
 
@@ -29,3 +29,10 @@ export interface ILogger {
 
 }
 
+/**
+ * Any interface that looks like
+ */
+export interface ErrorLike {
+    readonly message?: string;
+    readonly stack?: string;
+}

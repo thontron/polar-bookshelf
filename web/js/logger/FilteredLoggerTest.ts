@@ -11,11 +11,13 @@ describe('FilteredLogger', function() {
 
         const filteredLogger = new FilteredLogger(statsLogger, LogLevel.INFO);
 
+        const err = new Error("fake error");
+
         filteredLogger.verbose("hello");
         filteredLogger.debug("hello");
         filteredLogger.info("hello");
         filteredLogger.warn("hello");
-        filteredLogger.error("hello");
+        filteredLogger.error("hello", err);
         filteredLogger.notice("hello");
 
         assertJSON(statsLogger.stats, {

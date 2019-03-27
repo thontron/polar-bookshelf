@@ -2,6 +2,7 @@
  * Simple logger that just writes to the console.
  */
 import {ILogger} from './ILogger';
+import {ErrorLike} from './ILogger';
 
 /**
  * A logger that calls a delegate with try/catch and then does a console.error
@@ -27,8 +28,8 @@ export class SafeLogger implements ILogger {
         this.withTryCatch(() => this.delegate.warn(msg, ...args));
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.withTryCatch(() => this.delegate.error(msg, ...args));
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.withTryCatch(() => this.delegate.error(msg, err, arg0, arg1, arg2));
     }
 
     public info(msg: string, ...args: any[]) {

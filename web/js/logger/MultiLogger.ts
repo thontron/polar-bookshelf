@@ -3,6 +3,7 @@
  */
 import {ILogger} from './ILogger';
 import {SafeLogger} from './SafeLogger';
+import {ErrorLike} from './ILogger';
 
 /**
  * Allows us to log to multiple delegates at once.
@@ -33,8 +34,8 @@ export class MultiLogger implements ILogger {
         this.delegates.forEach(delegate => delegate.warn(msg, ...args));
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.delegates.forEach(delegate => delegate.error(msg, ...args));
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.delegates.forEach(delegate => delegate.error(msg, err, arg0, arg1, arg2));
     }
 
     public info(msg: string, ...args: any[]) {

@@ -3,6 +3,7 @@
  */
 import {ILogger} from '../ILogger';
 import {PackageManifest} from '../../util/PackageManifest';
+import {ErrorLike} from '../ILogger';
 
 /**
  * Annotates logs by including the version
@@ -35,8 +36,8 @@ export class VersionAnnotatingLogger implements ILogger {
         this.delegate.warn(this.versionAnnotation + ` ${msg}`, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.delegate.error(this.versionAnnotation + ` ${msg}`, ...args);
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.delegate.error(this.versionAnnotation + ` ${msg}`, err, arg0, arg1, arg2);
     }
 
     public verbose(msg: string, ...args: any[]) {

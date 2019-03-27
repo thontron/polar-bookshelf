@@ -19,8 +19,8 @@ export class ConsoleLogger implements ILogger {
         console.warn(msg, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
-        console.error(msg, ...args);
+    public error(msg: string, err: Error, arg0?: any, arg1?: any, arg2?: any) {
+        console.error(msg, err, arg0, arg1, arg2);
     }
 
     public verbose(msg: string, ...args: any[]) {

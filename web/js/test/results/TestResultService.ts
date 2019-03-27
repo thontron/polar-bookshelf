@@ -76,7 +76,7 @@ export class TestResultService {
 
         } else {
             // TODO consider telling the sender.
-            log.error("Existing test results already defined.: " + data.value);
+            log.warn("Existing test results already defined.: " + data.value);
         }
 
     }

@@ -50,7 +50,7 @@ class App<P> extends React.Component<{}, IAppState> {
                 });
 
             } else {
-                log.error("No docMeta");
+                log.warn("No docMeta");
             }
 
 

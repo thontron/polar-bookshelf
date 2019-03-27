@@ -5,6 +5,7 @@ import {ILogger} from './ILogger';
 import {FileLogger} from './FileLogger';
 import {Directories} from '../datastore/Directories';
 import {FilePaths} from '../util/FilePaths';
+import {ErrorLike} from './ILogger';
 
 /**
  * A logger which writes to disk but ONLY if they are errors.  This is needed
@@ -24,8 +25,8 @@ export class PersistentErrorLogger implements ILogger {
         this.delegate.notice(msg, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.delegate.error(msg, ...args);
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.delegate.error(msg, err, arg0, arg1, arg2);
     }
 
     public info(msg: string, ...args: any[]) {

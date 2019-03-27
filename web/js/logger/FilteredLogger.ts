@@ -1,5 +1,6 @@
 import {ILogger} from './ILogger';
 import {LogLevel} from './LogLevel';
+import {ErrorLike} from './ILogger';
 
 export class FilteredLogger implements ILogger {
 
@@ -39,9 +40,9 @@ export class FilteredLogger implements ILogger {
         this.delegate.warn(msg, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
         if (this.level < LogLevel.ERROR) { return; }
-        this.delegate.error(msg, ...args);
+        this.delegate.error(msg, err, arg0, arg1, arg2);
     }
 
     public async sync(): Promise<void> {

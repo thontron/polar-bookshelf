@@ -3,6 +3,7 @@
 import {Callers} from './Callers';
 import {LoggerDelegate} from './LoggerDelegate';
 import {ILogger} from './ILogger';
+import {ErrorLike} from './ILogger';
 
 export class Logger {
 
@@ -54,8 +55,8 @@ class DelegatedLogger implements ILogger {
         this.apply(LoggerDelegate.get().warn.bind(LoggerDelegate.get()), msg, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.apply(LoggerDelegate.get().error.bind(LoggerDelegate.get()), msg, ...args);
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.apply(LoggerDelegate.get().error.bind(LoggerDelegate.get()), msg, err, arg0, arg1, arg2);
     }
 
     public verbose(msg: string, ...args: any[]) {

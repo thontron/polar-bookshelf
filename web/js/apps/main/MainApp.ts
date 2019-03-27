@@ -115,7 +115,7 @@ export class MainApp {
             new CachingStreamInterceptorService(cacheRegistry, mainSession.protocol);
 
         await cacheInterceptorService.start()
-            .catch(err => log.error(err));
+            .catch(err => log.error("Unable to start cache interceptor: ", err));
 
         await captureController.start();
 

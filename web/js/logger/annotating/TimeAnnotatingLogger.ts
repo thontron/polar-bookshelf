@@ -2,6 +2,7 @@
  * Simple logger that just writes to the console.
  */
 import {ILogger} from '../ILogger';
+import {ErrorLike} from '../ILogger';
 
 /**
  * Annotates logs by including the time.
@@ -28,8 +29,8 @@ export class TimeAnnotatingLogger implements ILogger {
         this.delegate.warn(this.createTimestamp() + `: ${msg}`, ...args);
     }
 
-    public error(msg: string, ...args: any[]) {
-        this.delegate.error(this.createTimestamp() + `: ${msg}`, ...args);
+    public error(msg: string, err: ErrorLike, arg0?: any, arg1?: any, arg2?: any) {
+        this.delegate.error(this.createTimestamp() + `: ${msg}`, err, arg0, arg1, arg2);
     }
 
     public verbose(msg: string, ...args: any[]) {

@@ -26,7 +26,7 @@ export class FlashcardActions {
                 annotation.pageMeta.flashcards[flashcard.id] = Flashcards.createMutable(flashcard);
             }
 
-        }).catch(err => log.error(err));
+        }).catch(err => log.error("Unable to create flashcard: ", err));
 
     }
 
