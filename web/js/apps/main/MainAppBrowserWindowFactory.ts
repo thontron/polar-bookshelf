@@ -57,66 +57,12 @@ export const BROWSER_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOptions = 
 
 });
 
-export const MINIMAL_BROWSER_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOptions = Object.freeze({
-    // backgroundColor: '#FFF',
-    // width: WIDTH + SIDEBAR_BUFFER,
-    // height: HEIGHT,
-    show: false,
-    // https://electronjs.org/docs/api/browser-window#new-browserwindowoptions
-
-    // TODO: the AppIcon CAN be a file URL
-    // icon: APP_ICON,
-    webPreferences: {
-
-        // FIXME: it's either a bug with nodeIntegration OR a but with setting
-        // defaultEncoding.
-
-        // // TODO:
-        // // https://github.com/electron/electron/pull/794
-        // //
-        nodeIntegration: true,
-
-        // // NOTE: these must be disabled because they break pdf.js.  It must be
-        // // some change to require() from their workers.  So maybe I just can't
-        // // use workers for now.
-        nodeIntegrationInWorker: false,
-
-        //
-        // sandbox: false,
-
-        defaultEncoding: 'UTF-8',
-
-        // We are disabling web security now as a work around for CORS issues
-        // when loading fonts.  Once we resolve this we can enable webSecurity
-        // again.  We can completely remove this once we migrate to a complete
-        // solution for PHZ files being stored in the browser.
-        webSecurity: false,
-
-        webaudio: true,
-
-        /**
-         * Use a persistent cookie session between restarts.  This is used so
-         * that we keep user cookies including Google Analytics cookies.
-         */
-        //
-        // partition: 'persist:polar-app'
-
-    }
-
-});
-
 export class MainAppBrowserWindowFactory {
 
     public static createWindow(browserWindowOptions: Electron.BrowserWindowConstructorOptions = BROWSER_WINDOW_OPTIONS,
                                url = DEFAULT_URL): Promise<BrowserWindow> {
 
-        console.log("FIXME: creating window for URL: " + url);
-
-        if (url !== 'about:blank') {
-            browserWindowOptions = Object.assign({}, browserWindowOptions);
-        } else {
-            browserWindowOptions = Object.assign({}, browserWindowOptions);
-        }
+        browserWindowOptions = Object.assign({}, browserWindowOptions);
 
         const position = this.computeXY();
 
@@ -161,20 +107,8 @@ export class MainAppBrowserWindowFactory {
 
         }
 
-
-
-        const createBrowserWindow = () => {
-
-            if (url === 'about:blank') {
-                return new BrowserWindow(MINIMAL_BROWSER_WINDOW_OPTIONS);
-            }
-
-            return new BrowserWindow(browserWindowOptions);
-
-        };
-
         // Create the browser window.
-        const browserWindow = createBrowserWindow();
+        const browserWindow = new BrowserWindow(browserWindowOptions);
 
         browserWindow.on('close', function(e) {
             e.preventDefault();
