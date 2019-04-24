@@ -51,7 +51,7 @@ export const BROWSER_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOptions = 
          * that we keep user cookies including Google Analytics cookies.
          */
         //
-        // partition: 'persist:polar-app'
+        partition: 'persist:polar-app'
 
     }
 
