@@ -74,8 +74,8 @@ export const MINIMAL_BROWSER_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOp
         // // TODO:
         // // https://github.com/electron/electron/pull/794
         // //
-        // nodeIntegration: true,
-        //
+        nodeIntegration: true,
+
         // // NOTE: these must be disabled because they break pdf.js.  It must be
         // // some change to require() from their workers.  So maybe I just can't
         // // use workers for now.
