@@ -947,8 +947,13 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
 
                 const data = await dataProvider();
                 const docMetaID = FirebaseDatastore.computeDocMetaID(docInfo.fingerprint);
+
+                // FIXME: I dont' think this precondition si correct I think we
+                // ahve to return NULL here...
+
                 Preconditions.assertPresent(data, `No data for docMeta with fingerprint: ${docInfo.fingerprint}, docMetaID: ${docMetaID}`);
                 return DocMetas.deserialize(data!, docInfo.fingerprint);
+
             });
 
             const docMetaMutation: FirebaseDocMetaMutation = {

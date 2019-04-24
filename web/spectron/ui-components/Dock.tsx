@@ -59,11 +59,12 @@ class Styles {
  *   -  I need a CLEAN way to persist the state for this object in localstorage
  *      and for other components too.
  *
- *   - make sure the dock flows both ways... left and right.
+ *   - flyout doesn't work when we're toggled closed
  *
- *   - right doesn't work...
+ *   - flyout doesn't keep the splitter in place... should the splitter vanish
+ *     in this situation and we should just have borderRight or borderLeft?
  *
- *   - flyout doesn't work when we're toggled closed.
+ *   - should flyout have a shadow?
  *
  */
 export class Dock extends React.Component<IProps, IState> {
@@ -153,6 +154,13 @@ export class Dock extends React.Component<IProps, IState> {
 
         if (this.state.flyout) {
             sidebarStyle.position = 'absolute';
+
+            if (this.props.side === 'right') {
+                sidebarStyle.right = 0;
+            } else {
+                sidebarStyle.left = 0;
+            }
+
         }
 
         sidebarStyle.width = width;

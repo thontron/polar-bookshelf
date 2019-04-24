@@ -36,7 +36,7 @@ export const BROWSER_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOptions = 
          * Use a persistent cookie session between restarts.  This is used so
          * that we keep user cookies including Google Analytics cookies.
          */
-        partition: 'persist:polar-app'
+        // partition: 'persist:polar-app'
     }
 
 };

@@ -26,7 +26,7 @@ export class AppLauncher {
 
             // use a 'polar-app' session so we don't use the default session
             // which is intercepted.
-            browserWindowOptions.webPreferences!.partition = 'persist:polar-app';
+            // browserWindowOptions.webPreferences!.partition = 'persist:polar-app';
 
             return await MainAppBrowserWindowFactory.createWindow(browserWindowOptions, url);
 

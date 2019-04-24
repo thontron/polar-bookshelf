@@ -214,7 +214,7 @@ class App<P> extends React.Component<{}, IAppState> {
                               this is the right
                               <a href="http://cnn.com">asdf</a>
                           </div>}
-                          side="right"
+                          side="left"
                           initialWidth={100}
                           toggleCoupler={toggleCoupler}
                           setFlyoutCoupler={setFlyoutCoupler}
