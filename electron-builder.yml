@@ -22,6 +22,8 @@ mac:
     - ext: pdf
       role: Viewer
 
+
+
 linux:
   # TODO: consider using a custom productName here of polar-bookshelf to fix
   # a bug on Linux with the application windows.
@@ -97,3 +99,4 @@ publish:
   publishAutoUpdate: true
 
 asar: true
+afterPack: "./electron-builder-afterpack.js"
