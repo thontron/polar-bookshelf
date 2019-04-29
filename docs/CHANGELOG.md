@@ -1,4 +1,10 @@
+
+
 # 1.18.1
+
+- upgraded to latest firebase versions
+
+- cleanup orphan javascript
 
 - new component to ScrollIntoView so that when we're dealing with scrollable 
   and long form content we can make sure the content and scrolled and viewable. 
