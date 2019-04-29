@@ -1162,10 +1162,10 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
         const app = firebase.app();
 
         const auth = app.auth();
-        Preconditions.assertPresent(auth, "Not authenticated");
+        Preconditions.assertPresent(auth, "Not authenticated (no auth)");
 
         const user = auth.currentUser;
-        Preconditions.assertPresent(user, "Not authenticated");
+        Preconditions.assertPresent(user, "Not authenticated (no current user)");
 
         return user!.uid;
 

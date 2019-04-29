@@ -2,6 +2,9 @@ import * as firebase from './lib/firebase';
 import {RendererAnalytics} from '../ga/RendererAnalytics';
 import {AsyncProviders} from '../util/Providers';
 import {Firebase} from './Firebase';
+import {Logger} from '../logger/Logger';
+
+const log = Logger.create();
 
 const tracer = RendererAnalytics.createTracer('firestore');
 
@@ -31,11 +34,16 @@ export class Firestore {
 
             if (opts.enablePersistence) {
 
+                result.enablePersistence({ experimentalTabSynchronization: true })
+                    .catch(err => log.error("Unable to enable firebase persistence: ", err));
+
                 // TODO: this seems super slow and not sure why.  The tab sync
                 // seems to not impact performance at all.
-                await tracer.traceAsync('enablePersistence', async () => {
-                    await result.enablePersistence({ experimentalTabSynchronization: true });
-                });
+                // await tracer.traceAsync('enablePersistence', async () => {
+                //     await result.enablePersistence({ experimentalTabSynchronization: true });
+                // });
+
+
             }
 
             return result;
