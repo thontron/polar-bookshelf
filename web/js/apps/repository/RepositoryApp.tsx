@@ -200,47 +200,47 @@ export class RepositoryApp {
                 {/*TODO this doesn't actually work because the iframes aren't */}
                 {/*expanded properly I think. */}
 
-                {/*<TabNav addTabBinder={NULL_FUNCTION}*/}
-                        {/*initialTabs={[*/}
-                            {/*{*/}
-                                {/*title: "Repository",*/}
-                                {/*content: <div>*/}
+                <TabNav addTabBinder={NULL_FUNCTION}
+                        initialTabs={[
+                            {
+                                title: "Repository",
+                                content: <div>
 
-                                    {/*<HashRouter hashType="noslash">*/}
+                                    <HashRouter hashType="noslash">
 
-                                        {/*<Switch>*/}
-                                            {/*<Route exact path='/(logout|overview|login|configured|invite|premium)?' render={renderDocRepoApp}/>*/}
-                                            {/*<Route exact path='/annotations' render={renderAnnotationRepoApp}/>*/}
-                                            {/*<Route exact path='/whats-new' render={renderWhatsNew}/>*/}
-                                            {/*<Route exact path='/community' render={renderCommunity}/>*/}
-                                            {/*<Route exact path='/stats' render={renderStats}/>*/}
-                                            {/*<Route exact path='/logs' render={renderLogs}/>*/}
-                                            {/*<Route exact path='/editors-picks' render={editorsPicks}/>*/}
-                                        {/*</Switch>*/}
+                                        <Switch>
+                                            <Route exact path='/(logout|overview|login|configured|invite|premium)?' render={renderDocRepoApp}/>
+                                            <Route exact path='/annotations' render={renderAnnotationRepoApp}/>
+                                            <Route exact path='/whats-new' render={renderWhatsNew}/>
+                                            <Route exact path='/community' render={renderCommunity}/>
+                                            <Route exact path='/stats' render={renderStats}/>
+                                            <Route exact path='/logs' render={renderLogs}/>
+                                            <Route exact path='/editors-picks' render={editorsPicks}/>
+                                        </Switch>
 
-                                    {/*</HashRouter>*/}
+                                    </HashRouter>
 
-                                {/*</div>*/}
-                            {/*},*/}
-                            {/*{*/}
-                                {/*title: "How to be Successful",*/}
-                                {/*content: "http://localhost:8500/htmlviewer/index.html?file=http%3A%2F%2Flocalhost%3A8500%2Ffiles%2F12ftXRsX74J16Rmjwp85zhRswMstYCksLppdqCvnEeTz2Ut98ut&filename=12tTwL82eW-How_To_Be_Successful___Sam_Altman.phz&fingerprint=1TofZfqvEEcSgrNYi6Wo&zoom=page-width&strategy=portable"*/}
-                            {/*}*/}
-                        {/*]}/>*/}
+                                </div>
+                            },
+                            {
+                                title: "How to be Successful",
+                                content: "http://localhost:8500/htmlviewer/webview.html"
+                            }
+                        ]}/>
 
-                <HashRouter hashType="noslash">
+                {/*<HashRouter hashType="noslash">*/}
 
-                    <Switch>
-                        <Route exact path='/(logout|overview|login|configured|invite|premium)?' render={renderDocRepoApp}/>
-                        <Route exact path='/annotations' render={renderAnnotationRepoApp}/>
-                        <Route exact path='/whats-new' render={renderWhatsNew}/>
-                        <Route exact path='/community' render={renderCommunity}/>
-                        <Route exact path='/stats' render={renderStats}/>
-                        <Route exact path='/logs' render={renderLogs}/>
-                        <Route exact path='/editors-picks' render={editorsPicks}/>
-                    </Switch>
+                    {/*<Switch>*/}
+                        {/*<Route exact path='/(logout|overview|login|configured|invite|premium)?' render={renderDocRepoApp}/>*/}
+                        {/*<Route exact path='/annotations' render={renderAnnotationRepoApp}/>*/}
+                        {/*<Route exact path='/whats-new' render={renderWhatsNew}/>*/}
+                        {/*<Route exact path='/community' render={renderCommunity}/>*/}
+                        {/*<Route exact path='/stats' render={renderStats}/>*/}
+                        {/*<Route exact path='/logs' render={renderLogs}/>*/}
+                        {/*<Route exact path='/editors-picks' render={editorsPicks}/>*/}
+                    {/*</Switch>*/}
 
-                </HashRouter>
+                {/*</HashRouter>*/}
 
                 <HashRouter hashType="noslash">
 

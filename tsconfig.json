@@ -30,6 +30,8 @@
 
         "allowSyntheticDefaultImports": true,
 
+        "strictPropertyInitialization": false,
+
         "baseUrl": ".",
         "paths": {
             "*": ["node_modules/*"]
