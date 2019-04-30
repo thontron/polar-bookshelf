@@ -15,6 +15,17 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
             // FIXME: if there are too many tabs they are displayed on the next
             // line.
 
+            //
+            // Features I need..
+            //
+            //  - dark grey background
+            //  - close tabs with x button
+            //  - context menu
+            //  - key bindings
+            //  - everything should be a tab.. even the main repository app this
+            //    things are super fast and the main 'browser' is just a simple
+            //    wrapper around webview
+
             <TabNav addTabBinder={NULL_FUNCTION}
                     initialTabs={[
                         {
