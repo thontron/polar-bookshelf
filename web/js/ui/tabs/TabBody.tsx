@@ -20,7 +20,6 @@ export class TabBody extends React.Component<IProps, IState> {
             type webview = any;
 
 
-
             return <webview id={'tab-webview-' + tab.id}
                             disablewebsecurity
                             autosize

@@ -8,7 +8,7 @@ import {TabButtonContextMenu} from './TabButtonContextMenu';
 import {TabPanes} from './TabPanes';
 import {TabStyles} from './TabStyles';
 
-let tabSequence: number = 10000;
+let tabSequence: number = 0;
 
 // TODO
 //
@@ -39,18 +39,6 @@ export class TabNav extends React.Component<IProps, IState> {
         this.state = {
             activeTab: 0,
             tabs
-            // tabs: [
-            //     {
-            //         id: 0,
-            //         title: "Repository",
-            //         content: <div>This is the first page content</div>
-            //     },
-            //     {
-            //         id: 1,
-            //         title: "CNN",
-            //         content: 'http://cnn.com'
-            //     },
-            // ]
         };
 
     }
@@ -65,9 +53,7 @@ export class TabNav extends React.Component<IProps, IState> {
 
                     <NavItem key={tab.id}>
 
-                        <NavLink
-                            className={"p-0 " + (tab.id === this.state.activeTab ? "active" : "")}
-                            >
+                        <NavLink className={"p-0 " + (tab.id === this.state.activeTab ? "active" : "")}>
 
                             <div style={{display: 'flex'}}
                                  className={tab.id === this.state.activeTab ? "border-bottom border-primary " : ""}>
@@ -85,7 +71,7 @@ export class TabNav extends React.Component<IProps, IState> {
 
                                 <div className="mt-auto mb-auto mr-1">
 
-                                    <Button color="light"
+                                    <Button color="link"
                                             onClick={() => this.closeTab(tab.id)}
                                             className="text-muted p-1"
                                             style={{fontSize: '14px'}}>

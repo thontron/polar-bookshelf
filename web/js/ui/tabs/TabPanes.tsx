@@ -3,7 +3,6 @@ import {Tab} from './TabNav';
 import TabContent from 'reactstrap/lib/TabContent';
 import TabPane from 'reactstrap/lib/TabPane';
 import {TabBody} from './TabBody';
-import {TabStyles} from './TabStyles';
 
 export class TabPanes extends React.Component<IProps, IState> {
 

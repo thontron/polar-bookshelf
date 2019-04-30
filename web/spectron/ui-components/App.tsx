@@ -53,6 +53,7 @@ import {Dock} from './Dock';
 import {Channels} from '../../js/util/Channels';
 import {Suggestions} from '../../js/ui/feedback/Suggestions';
 import {FakeComponent0} from './FakeComponent0';
+import {FakeTabbedBrowser} from './FakeTabbedBrowser';
 
 class App<P> extends React.Component<{}, IAppState> {
 
@@ -185,7 +186,9 @@ class App<P> extends React.Component<{}, IAppState> {
 
 
             <div>
-                <FakeComponent0/>
+                {/*<FakeComponent0/>*/}
+
+                <FakeTabbedBrowser/>
             </div>
 
         );
