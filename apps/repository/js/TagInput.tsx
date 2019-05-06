@@ -14,6 +14,7 @@ import {Toaster} from '../../../web/js/ui/toaster/Toaster';
 import {IDs} from '../../../web/js/util/IDs';
 import {NULL_FUNCTION} from '../../../web/js/util/Functions';
 import {Blackout} from '../../../web/js/ui/blackout/Blackout';
+import {TagInputBody} from './TagInputBody';
 
 const log = Logger.create();
 
@@ -54,8 +55,6 @@ export class TagInput extends React.Component<IProps, IState> {
 
     private readonly id = IDs.create("popover-");
 
-    private select: CreatableSelect<TagOption> | null = null;
-
     constructor(props: IProps, context: any) {
         super(props, context);
 
@@ -64,8 +63,6 @@ export class TagInput extends React.Component<IProps, IState> {
 
         this.onCancel = this.onCancel.bind(this);
         this.onDone = this.onDone.bind(this);
-
-        this.handleChange = this.handleChange.bind(this);
 
         this.state = {
             open: false,
@@ -91,51 +88,6 @@ export class TagInput extends React.Component<IProps, IState> {
 
     public render() {
 
-        const availableTagOptions = TagOptions.fromTags(this.props.availableTags);
-
-        const pendingTags = TagOptions.fromTags(this.state.pendingTags);
-
-        const computeRelatedTags = () => {
-
-            const input = [...this.state.pendingTags]
-                            .map(current => current.label)
-                            ;
-
-            return this.props.relatedTags.compute(input).map(current => current.tag);
-
-        };
-
-        const relatedTags: string[] = computeRelatedTags();
-
-        const RelatedTagsItems = () => {
-            return <span>
-                {relatedTags.map(item =>
-                     <Button className="mr-1"
-                             key={item}
-                             style={Styles.relatedTag}
-                             color="light"
-                             size="sm"
-                             onClick={() => this.addRelatedTag(item)}>{item}</Button>)}
-            </span>;
-
-        };
-
-
-        const RelatedTagsWidget = () => {
-
-            if (relatedTags.length === 0) {
-                return <div></div>;
-            }
-
-            return <div style={Styles.relatedTags}>
-                <div className="mr-1" style={Styles.relatedTagsLabel}>
-                    <strong>Related tags: </strong>
-                </div>
-                <RelatedTagsItems/>
-            </div>;
-
-        };
-
         return (
 
             <div className="mt-auto mb-auto">
@@ -144,73 +96,18 @@ export class TagInput extends React.Component<IProps, IState> {
                    onClick={() => this.activate()}
                    className="fa fa-tag doc-button doc-button-inactive"/>
 
-                {/*tag-input-popover {*/}
-                {/*width: 500px !important;*/}
-                {/*max-width: 9999px !important;*/}
-            {/*}*/}
-
-                {/*.tag-input-popover label {*/}
-                {/*font-weight: bold;*/}
-            {/*}*/}
-
                 <Popover placement="auto"
                          isOpen={this.state.open}
                          target={this.id}
                          trigger="legacy"
                          toggle={() => this.deactivate()}
                          className="tag-input-popover shadow">
-                    {/*<PopoverHeader>Popover Title</PopoverHeader>*/}
 
-                    {/*style={{borderWidth: '1px', backgroundColor: true ? "#b94a48" : "#aaa"}}*/}
                     <PopoverBody style={Styles.popover} className="shadow">
 
-                        <div className="pt-1 pb-1">
-                            <strong>Assign tags to document:</strong>
-                        </div>
-
-                        <CreatableSelect
-                            isMulti
-                            isClearable
-                            autoFocus
-                            onKeyDown={event => this.onKeyDown(event)}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            onChange={(selectedOptions) => this.handleChange(selectedOptions as TagOption[])}
-                            value={pendingTags}
-                            defaultValue={pendingTags}
-                            placeholder="Create or select tags ..."
-                            options={availableTagOptions}
-                            ref={ref => this.select = ref}>
-
-                        </CreatableSelect>
-
-                        <div>
-
-                            <RelatedTagsWidget/>
-
-                        </div>
-
-                        <div className="mt-1">
-
-                            <div style={{display: 'flex'}}>
-
-                                <div className="ml-auto"/>
-
-                                <Button color="secondary"
-                                        size="sm"
-                                        onClick={() => this.onCancel()}>
-                                    Cancel
-                                </Button>
-
-                                <div className="ml-1"/>
-
-                                <Button color="primary"
-                                        size="sm"
-                                        onClick={() => this.onDone()}>
-                                    Done
-                                </Button>
-                            </div>
-                        </div>
+                        <TagInputBody {...this.props}
+                                      onDone={() => this.onDone()}
+                                      onCancel={() => this.onCancel()}/>
 
                     </PopoverBody>
                 </Popover>
@@ -218,22 +115,6 @@ export class TagInput extends React.Component<IProps, IState> {
             </div>
 
         );
-
-    }
-
-    private addRelatedTag(label: string) {
-
-        const tag: Tag = {
-            id: label,
-            label
-        };
-
-        const tags = [tag, ...this.state.pendingTags];
-
-        this.handleChange(TagOptions.fromTags(tags));
-
-        // need or else the button has focus now...
-        this.select!.focus();
 
     }
 
@@ -254,42 +135,6 @@ export class TagInput extends React.Component<IProps, IState> {
         // disk.
 
         onChange(this.state.pendingTags);
-
-    }
-
-    private onKeyDown(event: React.KeyboardEvent<HTMLElement>) {
-
-        if (event.key === "Escape") {
-            this.onCancel();
-        }
-
-        if (event.getModifierState("Control") && event.key === "Enter") {
-            this.onDone();
-    }
-
-    }
-
-    private handleChange(selectedOptions: TagOption[]) {
-
-        const tags = TagOptions.toTags(selectedOptions);
-
-        const validTags = Tags.findValidTags(...tags);
-        const invalidTags = Tags.findInvalidTags(...tags);
-
-        if (invalidTags.length !== 0) {
-
-            const invalidTagsStr =
-                invalidTags.map(current => current.label)
-                    .join(", ");
-
-            Toaster.warning("Some tags were excluded - spaces and other control characters not supported: " + invalidTagsStr,
-                            "Invalid tags");
-
-            log.warn("Some tags were invalid", invalidTags);
-
-        }
-
-        this.setState({...this.state, pendingTags: validTags});
 
     }
 
@@ -324,7 +169,6 @@ interface IState {
      * The tags that are actively being selected but not yet applied.
      */
     readonly pendingTags: Tag[];
-
 
 }
 
