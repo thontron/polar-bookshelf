@@ -2,11 +2,8 @@ import * as React from 'react';
 import {prepareContextMenuHandlers} from '@burtonator/react-context-menu-wrapper';
 import {ContextMenuHandlers} from '@burtonator/react-context-menu-wrapper';
 import {ContextMenuWrapper} from '@burtonator/react-context-menu-wrapper';
-import DropdownItem from 'reactstrap/lib/DropdownItem';
-import {NULL_FUNCTION} from '../../../web/js/util/Functions';
 import {DocDropdownItems} from './DocDropdownItems';
 import {RepoDocInfo} from './RepoDocInfo';
-import {IStyleMap} from '../../../web/js/react/IStyleMap';
 import deepEqual = require('deep-equal');
 
 let sequence: number = 0;

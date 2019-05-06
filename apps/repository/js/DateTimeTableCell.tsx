@@ -1,10 +1,7 @@
 import * as React from 'react';
-import {Logger} from '../../../web/js/logger/Logger';
 import {isPresent} from '../../../web/js/Preconditions';
 import Moment from 'react-moment';
 import {ISODateTimeString} from '../../../web/js/metadata/ISODateTimeStrings';
-
-const log = Logger.create();
 
 // TODO: this isn't really a table cell anymore.
 export class DateTimeTableCell extends React.PureComponent<IProps, any> {

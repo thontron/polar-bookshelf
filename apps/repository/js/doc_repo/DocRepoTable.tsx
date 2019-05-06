@@ -46,9 +46,12 @@ import {DocContextMenu} from '../DocContextMenu';
 import {Toaster} from '../../../../web/js/ui/toaster/Toaster';
 import {ProgressTracker} from '../../../../web/js/util/ProgressTracker';
 import {ProgressMessages} from '../../../../web/js/ui/progress_bar/ProgressMessages';
-import {Datastores} from '../../../../web/js/datastore/Datastores';
 import {Either} from '../../../../web/js/util/Either';
 import {BackendFileRefs} from '../../../../web/js/datastore/BackendFileRefs';
+import {CheckedCell} from './cells/CheckedCell';
+import {prepareContextMenuHandlers} from '@burtonator/react-context-menu-wrapper';
+import {ContextMenuWrapper} from '@burtonator/react-context-menu-wrapper';
+import DropdownItem from 'reactstrap/lib/DropdownItem';
 
 const log = Logger.create();
 
@@ -271,6 +274,7 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
     }
 
     public render() {
+
         const { data } = this.state;
 
         const contextMenuProps = {
@@ -282,12 +286,28 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
         };
 
+        // FIXME: give this a real ID in the future.
+        const contextMenuHandlers = prepareContextMenuHandlers({id: 'my-context-menu'});
+
         return (
 
             <FixedNav id="doc-repo-table">
 
-                <header>
+                <ContextMenuWrapper id="my-context-menu">
 
+                    <div className="border shadow rounded pt-2 pb-2"
+                         style={{backgroundColor: 'white'}}>
+
+                        <DropdownItem toggle={false}
+                                      onClick={() => NULL_FUNCTION}>
+                            This is fake
+                        </DropdownItem>
+
+                    </div>
+
+                </ContextMenuWrapper>
+
+                <header>
 
                     <RepoHeader persistenceLayerManager={this.props.persistenceLayerManager}/>
 
@@ -373,6 +393,11 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                 <FixedNavBody>
                     <div id="doc-table" className="ml-1" style={{height: '100%'}}>
+
+                        {/*TODO: FIXME: rewrite the context handlers by having one*/}
+                        {/*high level context menu and then having it operate over*/}
+                        {/*the selected index.. ..*/}
+
                         <ReactTable
                             data={data}
                             ref={(r: any) => this.reactTable = r}
@@ -441,27 +466,32 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
                                             // improve performance
 
                                             const viewIndex = row.viewIndex as number;
+                                            const checked = this.state.selected.includes(viewIndex);
 
-                                            return (<div style={{lineHeight: '1em'}}>
-
-                                                <Input checked={this.state.selected.includes(viewIndex)}
-                                                       style={{
-                                                           marginLeft: 'auto',
-                                                           marginRight: 'auto',
-                                                           margin: 'auto',
-                                                           position: 'relative',
-                                                           top: '2px',
-                                                           width: '16px',
-                                                           height: '16px',
-                                                       }}
-                                                       className="m-auto"
-                                                       onChange={NULL_FUNCTION}
-                                                       onClick={(event) => this.selectRow(viewIndex, event.nativeEvent, true)}
-                                                       type="checkbox"/>
-
-                                                {/*<i className="far fa-square"></i>*/}
-
-                                            </div>);
+                                            return (<CheckedCell checked={checked}
+                                                                 viewIndex={viewIndex}
+                                                                 onClick={(viewIndex, event) => this.selectRow(viewIndex, event, true)}/>);
+                                            //
+                                            // return (<div style={{lineHeight: '1em'}}>
+                                            //
+                                            //     <Input checked={this.state.selected.includes(viewIndex)}
+                                            //            style={{
+                                            //                marginLeft: 'auto',
+                                            //                marginRight: 'auto',
+                                            //                margin: 'auto',
+                                            //                position: 'relative',
+                                            //                top: '2px',
+                                            //                width: '16px',
+                                            //                height: '16px',
+                                            //            }}
+                                            //            className="m-auto"
+                                            //            onChange={NULL_FUNCTION}
+                                            //            onClick={(event) => this.selectRow(viewIndex, event.nativeEvent, true)}
+                                            //            type="checkbox"/>
+                                            //
+                                            //     {/*<i className="far fa-square"></i>*/}
+                                            //
+                                            // </div>);
                                         }
                                     },
                                     {
@@ -477,13 +507,13 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                                 <div id={id}>
 
-                                                    <DocContextMenu {...contextMenuProps}
-                                                                    id={'context-menu-' + row.index}
-                                                                    repoDocInfo={repoDocInfo}>
+                                                    {/*<DocContextMenu {...contextMenuProps}*/}
+                                                    {/*                id={'context-menu-' + row.index}*/}
+                                                    {/*                repoDocInfo={repoDocInfo}>*/}
 
                                                         <div>{row.value}</div>
 
-                                                    </DocContextMenu>
+                                                    {/*</DocContextMenu>*/}
 
                                                 </div>
 
@@ -504,17 +534,7 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             const repoDocInfo: RepoDocInfo = row.original;
 
-                                            return (
-
-                                                <DocContextMenu {...contextMenuProps}
-                                                                id={'context-menu-' + row.index}
-                                                                repoDocInfo={repoDocInfo}>
-
-                                                    <DateTimeTableCell className="doc-col-last-updated" datetime={row.value}/>
-
-                                                </DocContextMenu>
-
-                                            );
+                                            return <DateTimeTableCell className="doc-col-last-updated" datetime={row.value}/>;
                                         }
 
                                     },
@@ -532,13 +552,7 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             return (
 
-                                                <DocContextMenu {...contextMenuProps}
-                                                                id={'context-menu-' + row.index}
-                                                                repoDocInfo={repoDocInfo}>
-
-                                                    <DateTimeTableCell className="doc-col-added" datetime={row.value}/>
-
-                                                </DocContextMenu>
+                                                <DateTimeTableCell className="doc-col-added" datetime={row.value}/>
 
                                             );
                                         }
@@ -648,11 +662,7 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             return (
 
-                                                <DocContextMenu {...contextMenuProps}
-                                                                id={'context-menu-' + row.index}
-                                                                repoDocInfo={repoDocInfo}>
-                                                    <div>{formatted}</div>
-                                                </DocContextMenu>
+                                                <div>{formatted}</div>
 
                                             );
 
@@ -685,15 +695,10 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             return (
 
-                                                <DocContextMenu {...contextMenuProps}
-                                                                id={'context-menu-' + row.index}
-                                                                repoDocInfo={repoDocInfo}>
 
-                                                    <progress className="mt-auto mb-auto" max="100" value={ row.value } style={{
-                                                        width: '100%'
-                                                    }} />
-
-                                                </DocContextMenu>
+                                                <progress className="mt-auto mb-auto" max="100" value={ row.value } style={{
+                                                    width: '100%'
+                                                }} />
 
                                             );
                                         }
@@ -768,6 +773,8 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
                             // }]}
                             getTrProps={(state: any, rowInfo: any) => {
                                 return {
+
+                                    ...contextMenuHandlers,
 
                                     // include the doc fingerprint in the table
                                     // so that the tour can use

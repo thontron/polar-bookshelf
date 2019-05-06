@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const isEqual = require("react-fast-compare");
+import isEqual from "react-fast-compare";
 
 /**
  * Like PureComponent but does a deep comparison.
