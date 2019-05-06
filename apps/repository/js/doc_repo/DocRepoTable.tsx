@@ -307,89 +307,89 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                 </ContextMenuWrapper>
 
-                <header>
+                {/*<header>*/}
 
-                    <RepoHeader persistenceLayerManager={this.props.persistenceLayerManager}/>
+                {/*    <RepoHeader persistenceLayerManager={this.props.persistenceLayerManager}/>*/}
 
-                    <div id="header-filter">
+                {/*    <div id="header-filter">*/}
 
-                        <div style={{display: 'flex'}}>
+                {/*        <div style={{display: 'flex'}}>*/}
 
-                            <div className=""
-                                 style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto', display: 'flex'}}>
+                {/*            <div className=""*/}
+                {/*                 style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto', display: 'flex'}}>*/}
 
-                                <div className="mr-1"
-                                     style={{
-                                         whiteSpace: 'nowrap',
-                                         marginTop: 'auto',
-                                         marginBottom: 'auto'
-                                     }}>
+                {/*                <div className="mr-1"*/}
+                {/*                     style={{*/}
+                {/*                         whiteSpace: 'nowrap',*/}
+                {/*                         marginTop: 'auto',*/}
+                {/*                         marginBottom: 'auto'*/}
+                {/*                     }}>*/}
 
-                                    <AddContentButton importFromDisk={() => AddContentActions.cmdImportFromDisk()}
-                                                      captureWebPage={() => AddContentActions.cmdCaptureWebPage()}/>
+                {/*                    <AddContentButton importFromDisk={() => AddContentActions.cmdImportFromDisk()}*/}
+                {/*                                      captureWebPage={() => AddContentActions.cmdCaptureWebPage()}/>*/}
 
-                                </div>
+                {/*                </div>*/}
 
 
-                                <div className="mr-1"
-                                     style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto'}}>
+                {/*                <div className="mr-1"*/}
+                {/*                     style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto'}}>*/}
 
-                                    <div style={{display: 'flex'}}>
+                {/*                    <div style={{display: 'flex'}}>*/}
 
-                                        {/*<FilterTagInput tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}*/}
-                                                        {/*refresher={() => this.refresh()}*/}
-                                                        {/*disabled={this.state.selected.length === 0}*/}
-                                                        {/*filteredTags={this.filteredTags} />*/}
+                {/*                        /!*<FilterTagInput tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}*!/*/}
+                {/*                                        /!*refresher={() => this.refresh()}*!/*/}
+                {/*                                        /!*disabled={this.state.selected.length === 0}*!/*/}
+                {/*                                        /!*filteredTags={this.filteredTags} />*!/*/}
 
-                                        <div>
+                {/*                        <div>*/}
 
-                                            <TagButton id="tag-multiple-documents"
-                                                       disabled={this.state.selected.length <= 0}
-                                                       tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}
-                                                       onSelectedTags={tags => this.onMultiTagged(tags)}/>
+                {/*                            <TagButton id="tag-multiple-documents"*/}
+                {/*                                       disabled={this.state.selected.length <= 0}*/}
+                {/*                                       tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}*/}
+                {/*                                       onSelectedTags={tags => this.onMultiTagged(tags)}/>*/}
 
-                                        </div>
+                {/*                        </div>*/}
 
-                                        <div className="ml-1">
-                                            <MultiDeleteButton onCancel={NULL_FUNCTION}
-                                                               disabled={this.state.selected.length <= 0}
-                                                               onConfirm={() => this.onMultiDeleted()}/>
-                                        </div>
+                {/*                        <div className="ml-1">*/}
+                {/*                            <MultiDeleteButton onCancel={NULL_FUNCTION}*/}
+                {/*                                               disabled={this.state.selected.length <= 0}*/}
+                {/*                                               onConfirm={() => this.onMultiDeleted()}/>*/}
+                {/*                        </div>*/}
 
-                                    </div>
+                {/*                    </div>*/}
 
-                                </div>
+                {/*                </div>*/}
 
-                            </div>
+                {/*            </div>*/}
 
-                            <div style={{marginLeft: 'auto'}}>
+                {/*            <div style={{marginLeft: 'auto'}}>*/}
 
-                                <DocRepoFilterBar onToggleFlaggedOnly={value => this.onToggleFlaggedOnly(value)}
-                                                  onToggleFilterArchived={value => this.onToggleFilterArchived(value)}
-                                                  onFilterByTitle={(title) => this.onFilterByTitle(title)}
-                                                  tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}
-                                                  refresher={() => this.refresh()}
-                                                  filteredTags={this.docRepoFilters.filters.filteredTags}
-                                                  right={
-                                               <div className="d-mobile-none"
-                                                    style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto'}}>
+                {/*                <DocRepoFilterBar onToggleFlaggedOnly={value => this.onToggleFlaggedOnly(value)}*/}
+                {/*                                  onToggleFilterArchived={value => this.onToggleFilterArchived(value)}*/}
+                {/*                                  onFilterByTitle={(title) => this.onFilterByTitle(title)}*/}
+                {/*                                  tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}*/}
+                {/*                                  refresher={() => this.refresh()}*/}
+                {/*                                  filteredTags={this.docRepoFilters.filters.filteredTags}*/}
+                {/*                                  right={*/}
+                {/*                               <div className="d-mobile-none"*/}
+                {/*                                    style={{whiteSpace: 'nowrap', marginTop: 'auto', marginBottom: 'auto'}}>*/}
 
-                                                   <DocRepoTableDropdown id="table-dropdown"
-                                                                         options={Object.values(this.state.columns)}
-                                                                         onSelectedColumns={(selectedColumns) => this.onSelectedColumns(selectedColumns)}/>
-                                               </div>
-                                           }
-                                />
+                {/*                                   <DocRepoTableDropdown id="table-dropdown"*/}
+                {/*                                                         options={Object.values(this.state.columns)}*/}
+                {/*                                                         onSelectedColumns={(selectedColumns) => this.onSelectedColumns(selectedColumns)}/>*/}
+                {/*                               </div>*/}
+                {/*                           }*/}
+                {/*                />*/}
 
-                            </div>
+                {/*            </div>*/}
 
-                        </div>
+                {/*        </div>*/}
 
-                    </div>
+                {/*    </div>*/}
 
-                    <MessageBanner/>
+                {/*    <MessageBanner/>*/}
 
-                </header>
+                {/*</header>*/}
 
                 <FixedNavBody>
                     <div id="doc-table" className="ml-1" style={{height: '100%'}}>
@@ -503,21 +503,23 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
                                             const id = 'doc-repo-row-title' + row.index;
                                             const repoDocInfo: RepoDocInfo = row.original;
 
-                                            return (
+                                            return <div/>;
 
-                                                <div id={id}>
-
-                                                    {/*<DocContextMenu {...contextMenuProps}*/}
-                                                    {/*                id={'context-menu-' + row.index}*/}
-                                                    {/*                repoDocInfo={repoDocInfo}>*/}
-
-                                                        <div>{row.value}</div>
-
-                                                    {/*</DocContextMenu>*/}
-
-                                                </div>
-
-                                            );
+                                            // return (
+                                            //
+                                            //     <div id={id}>
+                                            //
+                                            //         {/*<DocContextMenu {...contextMenuProps}*/}
+                                            //         {/*                id={'context-menu-' + row.index}*/}
+                                            //         {/*                repoDocInfo={repoDocInfo}>*/}
+                                            //
+                                            //             <div>{row.value}</div>
+                                            //
+                                            //         {/*</DocContextMenu>*/}
+                                            //
+                                            //     </div>
+                                            //
+                                            // );
                                         }
 
                                     },
@@ -534,7 +536,9 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             const repoDocInfo: RepoDocInfo = row.original;
 
-                                            return <DateTimeTableCell className="doc-col-last-updated" datetime={row.value}/>;
+                                            // return <DateTimeTableCell className="doc-col-last-updated" datetime={row.value}/>;
+                                            return <div/>;
+
                                         }
 
                                     },
@@ -550,11 +554,13 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             const repoDocInfo: RepoDocInfo = row.original;
 
-                                            return (
+                                            // return (
+                                            //
+                                            //     {/*<DateTimeTableCell className="doc-col-added" datetime={row.value}/>*/}
+                                            //
+                                            // );
+                                            return <div/>;
 
-                                                <DateTimeTableCell className="doc-col-added" datetime={row.value}/>
-
-                                            );
                                         }
                                     },
                                     {
@@ -651,20 +657,22 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
                                             // TODO: move to a PureComponent to
                                             // improve performance
 
-                                            const tags: {[id: string]: Tag} = row.original.tags;
+                                            // const tags: {[id: string]: Tag} = row.original.tags;
+                                            //
+                                            // const formatted = Object.values(tags)
+                                            //     .map(tag => tag.label)
+                                            //     .sort()
+                                            //     .join(", ");
+                                            //
+                                            // const repoDocInfo: RepoDocInfo = row.original;
+                                            //
+                                            // return (
+                                            //
+                                            //     <div>{formatted}</div>
+                                            //
+                                            // );
 
-                                            const formatted = Object.values(tags)
-                                                .map(tag => tag.label)
-                                                .sort()
-                                                .join(", ");
-
-                                            const repoDocInfo: RepoDocInfo = row.original;
-
-                                            return (
-
-                                                <div>{formatted}</div>
-
-                                            );
+                                            return <div/>;
 
                                         }
                                     },
@@ -693,14 +701,7 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
 
                                             const repoDocInfo: RepoDocInfo = row.original;
 
-                                            return (
-
-
-                                                <progress className="mt-auto mb-auto" max="100" value={ row.value } style={{
-                                                    width: '100%'
-                                                }} />
-
-                                            );
+                                            return <div/>;
                                         }
                                     },
                                     {
@@ -714,6 +715,9 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
                                         sortable: false,
                                         className: 'doc-dropdown d-none-mobile',
                                         Cell: (row: any) => {
+
+                                            // TODO: this component by itself takes 130ms per click to load
+                                            // which is almost all of the time... or about 220ms
 
                                             const repoDocInfo: RepoDocInfo = row.original;
 
@@ -752,6 +756,8 @@ export default class DocRepoTable extends ReleasingReactComponent<IProps, IState
                                                     </DocButton>
 
                                                 </div>);
+                                            //
+                                            // return <div/>;
 
                                         }
                                     }

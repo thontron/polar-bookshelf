@@ -50,6 +50,21 @@ const Styles: IStyleMap = {
 
 };
 
+const RelatedTagsWidget = () => {
+
+    if (relatedTags.length === 0) {
+        return <div></div>;
+    }
+
+    return <div style={Styles.relatedTags}>
+        <div className="mr-1" style={Styles.relatedTagsLabel}>
+            <strong>Related tags: </strong>
+        </div>
+        <RelatedTagsItems/>
+    </div>;
+
+};
+
 export class TagInput extends React.Component<IProps, IState> {
 
     private readonly id = IDs.create("popover-");
@@ -117,22 +132,6 @@ export class TagInput extends React.Component<IProps, IState> {
                              size="sm"
                              onClick={() => this.addRelatedTag(item)}>{item}</Button>)}
             </span>;
-
-        };
-
-
-        const RelatedTagsWidget = () => {
-
-            if (relatedTags.length === 0) {
-                return <div></div>;
-            }
-
-            return <div style={Styles.relatedTags}>
-                <div className="mr-1" style={Styles.relatedTagsLabel}>
-                    <strong>Related tags: </strong>
-                </div>
-                <RelatedTagsItems/>
-            </div>;
 
         };
 
@@ -300,7 +299,7 @@ export interface IProps {
     /**
      * The tags that can be selected.
      */
-    readonly availableTags: Tag[];
+    readonly availableTags: () => Tag[];
 
     /**
      * The existing tags on this item.
