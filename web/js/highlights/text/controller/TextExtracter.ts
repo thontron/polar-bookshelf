@@ -1,28 +1,27 @@
 import {TextHighlightRow} from './TextHighlightRow';
 import {TextRect} from '../../../metadata/TextRect';
 import {Preconditions} from '../../../Preconditions';
-import $ from '../../../ui/JQuery';
 
 /**
  * Takes TextHighlightRows and then builds adjacent test runs from the data.
  */
 export class TextExtracter {
 
-    static toTextSelections(textHighlightRows: TextHighlightRow[]) {
+    public static toTextSelections(textHighlightRows: TextHighlightRow[]) {
 
-        let result: TextRect[] = [
+        const result: TextRect[] = [
 
         ];
 
-        textHighlightRows.forEach(function (textHighlightRow) {
+        textHighlightRows.forEach(textHighlightRow => {
 
-            Preconditions.assertNotNull(textHighlightRow.rectElements, "rectElements");
+            Preconditions.assertPresent(textHighlightRow.rectElements, "rectElements");
 
-            textHighlightRow.rectElements.forEach(function(rectElement) {
+            textHighlightRow.rectElements.forEach(rectElement => {
 
-                let textSelection = new TextRect({
+                const textSelection = new TextRect({
                     rect: rectElement.rect,
-                    text: $(rectElement.element).text()
+                    text: rectElement.element.textContent
                 });
 
                 result.push(textSelection);

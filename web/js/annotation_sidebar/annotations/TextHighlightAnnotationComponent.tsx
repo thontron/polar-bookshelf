@@ -60,7 +60,7 @@ export class TextHighlightAnnotationComponent extends React.Component<IProps, IS
 
                             </div>
 
-                            <div className="text-sm"
+                            <div className="text-md"
                                   dangerouslySetInnerHTML={{__html: html}}>
 
                             </div>

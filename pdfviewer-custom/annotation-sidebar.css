@@ -2,7 +2,11 @@
 
 .annotation-sidebar,
 .annotation-sidebar * {
-    font-size: 14px !important;
+    font-size: 15px !important;
+}
+
+.annotation-context-link * {
+    font-size: 12px !important;
 }
 
 .annotation-sidebar p {
@@ -19,10 +23,12 @@
 }
 
 .annotation-sidebar {
+    background-color: #FFFFFF;
     padding-top: 5px;
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.84);
+    color: rgb(0, 0, 0);
+    -webkit-font-smoothing: antialiased;
 }
 
 .annotation-sidebar .text-highlight {
