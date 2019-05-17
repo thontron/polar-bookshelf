@@ -14,25 +14,6 @@ const log = Logger.create();
 
 const Styles: IStyleMap = {
 
-    popover: {
-        width: '500px !important',
-        maxWidth: '9999px !important'
-    },
-
-    label: {
-        fontWeight: 'bold'
-    },
-
-    relatedTags: {
-        marginTop: '5px',
-        display: 'flex',
-    },
-
-    relatedTagsLabel: {
-        marginTop: 'auto',
-        marginBottom: 'auto'
-    },
-
     relatedTag: {
         display: 'inline-block',
         backgroundColor: '#e5e5e5',
