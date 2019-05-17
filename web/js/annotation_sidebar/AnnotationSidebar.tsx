@@ -137,20 +137,23 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
         // TODO: remove all these listeners when the component unmounts... in
         // our case though it never unmounts
 
-        new AreaHighlightModel().registerListener(this.props.doc.docMeta, annotationEvent => {
+        const {docMeta} = this.props.doc;
 
-            const handleConversion = async () => {
+        new AreaHighlightModel().registerListener(docMeta, annotationEvent => {
+
+            const handleConversion = () => {
 
                 const converter = (annotationValue: AreaHighlight) => {
 
                     const {persistenceLayerProvider} = this.props;
                     return DocAnnotations.createFromAreaHighlight(persistenceLayerProvider,
+                                                                  docMeta,
                                                                   annotationValue,
                                                                   annotationEvent.pageMeta);
                 };
 
                 const docAnnotation =
-                    await this.convertAnnotation(annotationEvent.value, converter);
+                    this.convertAnnotation(annotationEvent.value, converter);
 
                 this.handleAnnotationEvent(annotationEvent.id,
                                            annotationEvent.traceEvent.mutationType,
@@ -158,9 +161,7 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
 
             };
 
-            handleConversion()
-                .catch(err => log.error("Unable to convert value: ", err));
-
+            handleConversion();
 
         });
 
@@ -168,7 +169,8 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
 
             const docAnnotation =
                 this.convertAnnotation(annotationEvent.value,
-                                       annotationValue => DocAnnotations.createFromTextHighlight(annotationValue,
+                                       annotationValue => DocAnnotations.createFromTextHighlight(docMeta,
+                                                                                                 annotationValue,
                                                                                                  annotationEvent.pageMeta));
 
             this.handleAnnotationEvent(annotationEvent.id,
@@ -179,7 +181,7 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
         new CommentModel().registerListener(this.props.doc.docMeta, annotationEvent => {
 
             const comment: Comment = annotationEvent.value || annotationEvent.previousValue;
-            const childDocAnnotation = DocAnnotations.createFromComment(comment, annotationEvent.pageMeta);
+            const childDocAnnotation = DocAnnotations.createFromComment(docMeta, comment, annotationEvent.pageMeta);
 
             this.handleChildAnnotationEvent(annotationEvent.id,
                                             annotationEvent.traceEvent.mutationType,
@@ -190,7 +192,7 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
         new FlashcardModel().registerListener(this.props.doc.docMeta, annotationEvent => {
 
             const flashcard: Flashcard = annotationEvent.value || annotationEvent.previousValue;
-            const childDocAnnotation = DocAnnotations.createFromFlashcard(flashcard, annotationEvent.pageMeta);
+            const childDocAnnotation = DocAnnotations.createFromFlashcard(docMeta, flashcard, annotationEvent.pageMeta);
 
             this.handleChildAnnotationEvent(annotationEvent.id,
                                             annotationEvent.traceEvent.mutationType,
@@ -225,7 +227,7 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
         const annotation = this.docAnnotationIndex.docAnnotationMap[ref.value];
 
         if (! annotation) {
-            log.warn("No annotation for ref:", annotation);
+            log.warn("No annotation for ref:", ref.value);
             return;
         }
 
@@ -254,10 +256,7 @@ export class AnnotationSidebar extends React.Component<IProps, IState> {
                                   mutationType: MutationType,
                                   docAnnotation: DocAnnotation | undefined) {
 
-        if (mutationType === MutationType.INITIAL) {
-            // we already have the data properly.
-            return;
-        } else if (mutationType === MutationType.DELETE) {
+        if (mutationType === MutationType.DELETE) {
 
             this.docAnnotationIndex
                 = DocAnnotationIndexes.delete(this.docAnnotationIndex, id);

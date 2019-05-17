@@ -1,13 +1,12 @@
 import {ISODateTimeString} from '../metadata/ISODateTimeStrings';
 import {Firestore} from '../firebase/Firestore';
 import {Hashcodes} from '../Hashcodes';
-import {Firebase} from '../firebase/Firebase';
+import {MachineID} from '../util/MachineIDs';
 
 export class UserFeedbacks {
 
     public static async write(userFeedback: UserFeedback) {
 
-        Firebase.init();
         const firestore = await Firestore.getInstance();
 
         const id = Hashcodes.createRandomID();
@@ -19,7 +18,6 @@ export class UserFeedbacks {
     }
 
 }
-
 
 interface UserFeedback {
 
@@ -35,10 +33,12 @@ interface UserFeedback {
 
     readonly created: ISODateTimeString;
 
+    readonly machine: MachineID;
+
     // TODO: more fields including a unique/blinded ID for the user, the date
     // their account was created (so I can do cohorts for this)
 
 }
 
-type NetPromoterScore = 0 | 1 | 2 | 3| 4 | 5 | 6 | 7 | 8 | 9 | 10;
+type NetPromoterScore = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 

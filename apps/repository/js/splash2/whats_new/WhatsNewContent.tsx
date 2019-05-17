@@ -28,14 +28,26 @@ export class WhatsNewContent extends React.Component<IProps, IState> {
 
                     <div className="intro">
 
+                        <p className="text-center">
+                            <iframe className="embed-responsive-item"
+                                    width="560"
+                                    height="315"
+                                    src="https://www.youtube.com/embed/Q5SU31cT4DQ"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen></iframe>
+                        </p>
+
                         <p>
-                            Polar 1.19 adds three big features.
+                            Polar 1.19 has been a lot of work but it's finally out the door.
+
+                            There are a few we want to highlight about this release.
                         </p>
 
                         <b>Area Highlights</b>
 
                         <p>
-                            Area highlights are now updated in the sidebar and
+                            Area highlights are now shown in the sidebar and
                             updated and resized while you drag the area
                             highlight box.
                         </p>
@@ -46,6 +58,29 @@ export class WhatsNewContent extends React.Component<IProps, IState> {
                             We've updated the annotations view to show
                             preview annotations and a better view of each
                             annotation including showing area highlights.
+                        </p>
+
+                        <b>Color Selector</b>
+
+                        <p>
+                            There's now an advanced color selector for highlights
+                            and this expands us to 12 different colors.  We're going
+                            to expand the palette in the future but this is already
+                            a step in the right directly.
+                        </p>
+
+                        <p>
+                            Technically we support any RGB value but we're
+                            limiting the colors you can select for now just to
+                            make the UI simpler and easy to use.
+                        </p>
+
+                        <b>Performance Improvements</b>
+
+                        <p>
+                            We've also implemented some more major performance
+                            improvements when working with larger documents and
+                            larger sets of annotations.
                         </p>
 
                         <b>Native PDF Handling in Web Extension Disabled</b>

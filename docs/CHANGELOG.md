@@ -1,5 +1,76 @@
 
+# 1.19.6
+
+- new clipboard cleanser for properly handling the clipboard when pasting from 
+  part of the PDF.  The handling is not yet perfect but we're making steps in 
+  that direction at least.
+
+- Fixed bug with highlights vanishing when colors were changed
+
+- Fixes bugs with .debs 
+
+# 1.19.5
+
+- Fixes some bugs with snaps
+
+# 1.19.4
+
+- unique machines code properly merged 
+
+- enable snap distribution again. 
+
+# 1.19.3
+
+- Using a border around the selected item in the annotation view not a background
+
+- Fixed bug with the percentages being slightly off and causing issues being 
+  greater than 100%
+
+- Fixed a small performance issue with N writes during write() which also means
+  we increase performance but lower Firebase costs.
+
+- Fixed bug with formatting being selected and part of the form being selected 
+  when double clicking in comments.
+  
+# 1.19.2
+
+- Fixed bug with deletes not working. I need to get automated testing setup!
+
+# 1.19.1
+
+- fixed a CSS issue with the dock
+
+- Fixed a bad bug where comments and flashcards wouldn't reload in the sidebar.
+
+- set a max height for the background resizer and don't allow it to go crazy
+  resizing itself forever.
+
+- annotation sidebar is resizeable now
+
+- proper capture of iframes now
+
+- upgrade to latest jsdom
+
+- 'Delete' char now works to delete one or multiple docs and you're prompted to
+  confirm.
+
+- Fixed bug where the PDF page size yielded an incorrect placement of the area 
+  highlight.
+
+- The left side dock in the annotation view is now resizeable.
+
 # 1.19.0
+
+- Fixed major performance issue when creating lots of annotations.
+
+- New color picker with advanced colors for highlights.
+
+- Fixed bug where capture would not remove noscript elements and would mangle 
+  the UI.
+  
+- Dropdowns are faster now due to no delay.
+
+- Fixed bug with pagemarks < 1%   
 
 - Upgrade to Electron 5.0.1
 
