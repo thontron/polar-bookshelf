@@ -10,6 +10,7 @@ import {TabStyles} from './TabStyles';
 import {Either} from '../../util/Either';
 import {Tuples} from '../../util/Tuples';
 import {IEntryContext} from '../../util/Tuples';
+import {Arrays} from '../../util/Arrays';
 
 let tabSequence: number = 0;
 
@@ -28,6 +29,8 @@ export class TabNav extends React.Component<IProps, IState> {
         this.closeTab = this.closeTab.bind(this);
         this.closeOtherTabs = this.closeOtherTabs.bind(this);
         this.nextTab = this.nextTab.bind(this);
+        this.prevTab = this.prevTab.bind(this);
+        this.changeTab = this.changeTab.bind(this);
 
         this.onKeyDown = this.onKeyDown.bind(this);
 
@@ -53,12 +56,22 @@ export class TabNav extends React.Component<IProps, IState> {
 
     private onKeyDown(event: KeyboardEvent) {
 
+        // TODO we need jump to specific tab...
+        // Jump to a specific tab	Ctrl + 1 through Ctrl + 8
+
+        // Ctrl + w or Ctrl + F4
+
         if (event.code === 'KeyW' && event.ctrlKey) {
             this.closeTab(Either.ofLeft(event));
         }
 
+        // FIXME: needs to be Apple not control on mac...
         if (event.code === 'PageDown' && event.ctrlKey) {
             this.nextTab();
+        }
+
+        if (event.code === 'PageUp' && event.ctrlKey) {
+            this.prevTab();
         }
 
     }
@@ -77,6 +90,7 @@ export class TabNav extends React.Component<IProps, IState> {
 
                         <NavLink className={"p-0 " + (tab.id === this.state.activeTab ? "active" : "")}>
 
+                            {/*TODO: this should be one component*/}
                             <div style={{display: 'flex'}}
                                  className={tab.id === this.state.activeTab ? "border-bottom border-primary " : ""}>
 
@@ -96,7 +110,7 @@ export class TabNav extends React.Component<IProps, IState> {
                                     <Button color="link"
                                             onClick={() => this.closeTab(Either.ofRight(tab.id))}
                                             className="text-muted p-1"
-                                            disabled={tab.required}
+                                            hidden={tab.required}
                                             style={{fontSize: '14px'}}>
 
                                         <i className="fas fa-times"></i>
@@ -149,41 +163,76 @@ export class TabNav extends React.Component<IProps, IState> {
 
     }
 
-    private nextTab() {
+    private changeTab(dir: 'fwd' | 'rev') {
 
-        const computeTabOrder = (context: IEntryContext<Tab> | undefined): ReadonlyArray<Tab> => {
+        interface TabOrder {
+            first: Tab;
+            next?: Tab;
+        }
 
-            const result: Tab[] = [];
+        interface TabIdx {
+            readonly idx: number;
+            readonly tab: Tab;
+        }
 
-            if  (! context) {
-                return result;
+        const computeTabIdx = (id: number, tabs: readonly Tab[]): TabIdx | undefined => {
+
+            let idx: number = 0;
+            for (; idx < tabs.length; ++idx) {
+
+                const tab = tabs[idx];
+
+                if (tab.id === id) {
+
+                    return {idx, tab};
+
+                }
             }
 
-            if (context.next) {
-                result.push(context.next);
-            }
-
-            if (context.prev) {
-                result.push(context.prev);
-            }
-
-            return result;
+            return undefined;
 
         };
 
-        const currentTab = Tuples.firstMatching(this.state.tabs,
-                                                tab => tab.id === this.state.activeTab);
+        const computeTabOrder = (activeTab: number, tabs: readonly Tab[]): TabOrder | undefined => {
 
-        const tabOrder = computeTabOrder(currentTab);
+            const tabIdx = computeTabIdx(activeTab, tabs);
 
-        if (tabOrder.length > 0) {
+            if ( ! tabIdx) {
+                return undefined;
+            }
 
-            // FIXME: wrap...
+            const first = tabs[0];
+            const head = Arrays.head(tabs.slice(tabIdx.idx), 2);
 
-            this.setState({...this.state, activeTab: tabOrder[0].id});
+            console.log("FIXME: ", {head})
+            const next = head.length === 2 ? head[1] : undefined;
+
+            return {first, next};
+
+        };
+
+        const tabs = dir === 'fwd' ? this.state.tabs : [...this.state.tabs].reverse();
+
+        const tabOrder = computeTabOrder(this.state.activeTab, tabs);
+
+        console.log("FIXME ", tabOrder);
+
+        if (tabOrder) {
+
+            const tab = tabOrder.next || tabOrder.first;
+
+            this.setState({...this.state, activeTab: tab.id});
 
         }
 
+    }
+
+    private nextTab() {
+        this.changeTab('fwd');
+    }
+
+    private prevTab() {
+        this.changeTab('rev');
     }
 
 
