@@ -1,13 +1,128 @@
 
+# 1.19.7
+
+- Fixed bug in htmlviewer where the sandbox was breaking doc loading.
+
+- Fixed an issue with polar on linux not resolving symlinks properly on startup.
+
+- JSON is now represented without spaced to cut storage costs in half and speed
+  up writes.
+
+- Update to latest interactjs
+
+- Datastore 'overview' now works on Firebase and syncs up with cloud aware 
+  datastore properly I think.
+
+# 1.19.6
+
+- Fixed typo with "Appendix"
+
+- More aggressive prompting for suggestions but only 1x per week now.
+
+- new clipboard cleanser for properly handling the clipboard when pasting from 
+  part of the PDF.  The handling is not yet perfect but we're making steps in 
+  that direction at least.
+
+- Fixed bug with highlights vanishing when colors were changed
+
+- Fixed bugs with .debs 
+
+# 1.19.5
+
+- Fixes some bugs with snaps
+
+# 1.19.4
+
+- we are now prompting the user for suggestions on how to fix polar.
+
+- unique machines code properly merged 
+
+- enable snap distribution again. 
+
+# 1.19.3
+
+- Using a border around the selected item in the annotation view not a background
+
+- Fixed bug with the percentages being slightly off and causing issues being 
+  greater than 100%
+
+- Fixed a small performance issue with N writes during write() which also means
+  we increase performance but lower Firebase costs.
+
+- Fixed bug with formatting being selected and part of the form being selected 
+  when double clicking in comments.
+  
+# 1.19.2
+
+- Fixed bug with deletes not working. I need to get automated testing setup!
+
+# 1.19.1
+
+- fixed a CSS issue with the dock
+
+- Fixed a bad bug where comments and flashcards wouldn't reload in the sidebar.
+
+- set a max height for the background resizer and don't allow it to go crazy
+  resizing itself forever.
+
+- annotation sidebar is resizeable now
+
+- proper capture of iframes now
+
+- upgrade to latest jsdom
+
+- 'Delete' char now works to delete one or multiple docs and you're prompted to
+  confirm.
+
+- Fixed bug where the PDF page size yielded an incorrect placement of the area 
+  highlight.
+
+- The left side dock in the annotation view is now resizeable.
+
+# 1.19.0
+
+- Fixed major performance issue when creating lots of annotations.
+
+- New color picker with advanced colors for highlights.
+
+- Fixed bug where capture would not remove noscript elements and would mangle 
+  the UI.
+  
+- Dropdowns are faster now due to no delay.
+
+- Fixed bug with pagemarks < 1%   
+
+- Upgrade to Electron 5.0.1
+
+- Fixed bug with mouse up when using iframes.
+
+- Area highlights now supported
+
+- Updated annotation view which is more usable and allows you to work with your 
+  notes and annotations more directly including better filtering and UI.
+
+- Polar chrome extension no longer handles PDFs by default.  We will have to 
+  keep this functionality disabled until we can embed the entire web app 
+  within the chrome extension but this is a difficult task for now.
 
 # 1.18.1
 
-- upgraded to latest firebase versions
-
-- cleanup orphan javascript
-
 - new component to ScrollIntoView so that when we're dealing with scrollable 
   and long form content we can make sure the content and scrolled and viewable. 
+
+- New handling for scrolling so that documents with slight overflow don't shift
+  on us.
+
+- Fixed bug where capture would fail because load was 'aborted' but it really
+  doesn't matter as we're just triggering load and it's up to the user if they
+  want to capture.
+
+- Polar chrome extension now part of main polar repo for better support and 
+  faster iteration.
+
+- Upgraded to latest firebase versions
+
+- cleanup orphan javascript
 
 # 1.18.0
 

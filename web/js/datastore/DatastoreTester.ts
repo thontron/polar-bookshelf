@@ -16,14 +16,10 @@ import {Backend} from './Backend';
 import {Datastore} from './Datastore';
 import {DocInfo} from '../metadata/DocInfo';
 import {DefaultDatastoreMutation} from './DatastoreMutation';
-import {func} from 'prop-types';
 import {Latch} from '../util/Latch';
 import {Datastores} from './Datastores';
-import {PersistenceLayers} from './PersistenceLayers';
 import {DiskDatastore} from './DiskDatastore';
 import {TestingTime} from '../test/TestingTime';
-
-const rimraf = require('rimraf');
 
 const tmpdir = os.tmpdir();
 
@@ -46,48 +42,79 @@ export class DatastoreTester {
 
             beforeEach(async function() {
 
-                console.log("===== before test ====");
+                try {
 
-                // TODO: might want to run
-                await Files.removeDirectoryRecursivelyAsync(dataDir);
+                    console.log("===== before test ====");
 
-                GlobalDataDir.set(dataDir);
-                datastore = await datastoreFactory();
-                directories = new Directories();
+                    console.log("Removing directory recursively: " + dataDir);
 
-                persistenceLayer = new DefaultPersistenceLayer(datastore);
+                    await Files.removeDirectoryRecursivelyAsync(dataDir);
 
-                await persistenceLayer.init();
-                await Datastores.purge(datastore);
+                    GlobalDataDir.set(dataDir);
+                    console.log("Creating new datastore");
 
-                docMeta = MockDocMetas.createWithinInitialPagemarks(fingerprint, 14);
+                    datastore = await datastoreFactory();
+                    directories = new Directories();
 
-                docMeta.docInfo.filename = `${fingerprint}.phz`;
+                    persistenceLayer = new DefaultPersistenceLayer(datastore);
 
-                await persistenceLayer.delete({fingerprint, docInfo: docMeta.docInfo});
+                    console.log("Init of new persistence layer...");
+                    await persistenceLayer.init();
+                    console.log("Init of new persistence layer...done");
 
-                const contains = await persistenceLayer.contains(fingerprint);
+                    console.log("Purge of new persistence layer...");
+                    await Datastores.purge(datastore, purgeEvent => console.log("Purged: ", purgeEvent));
+                    console.log("Purge of new persistence layer...done");
 
-                assert.equal(contains, false, "Document already exists in persistence layer: " + fingerprint);
+                    docMeta = MockDocMetas.createWithinInitialPagemarks(fingerprint, 14);
 
-                await MockPHZWriter.write(FilePaths.create(directories.stashDir, `${fingerprint}.phz`));
+                    docMeta.docInfo.filename = `${fingerprint}.phz`;
 
-                const datastoreMutation = new DefaultDatastoreMutation<DocInfo>();
-                await persistenceLayer.write(fingerprint, docMeta, {datastoreMutation});
+                    await persistenceLayer.delete({ fingerprint, docInfo: docMeta.docInfo });
 
-                // make sure we're always using the datastore mutations
-                await datastoreMutation.written.get();
-                await datastoreMutation.committed.get();
+                    const contains = await persistenceLayer.contains(fingerprint);
+
+                    assert.equal(contains, false, "Document already exists in persistence layer: " + fingerprint);
+
+                    await Files.createDirAsync(directories.dataDir);
+                    await Files.createDirAsync(directories.stashDir);
+
+                    await MockPHZWriter.write(FilePaths.create(directories.stashDir, `${fingerprint}.phz`));
+
+                    const datastoreMutation = new DefaultDatastoreMutation<DocInfo>();
+
+                    await persistenceLayer.write(fingerprint, docMeta, { datastoreMutation });
+
+                    // make sure we're always using the datastore mutations
+                    await datastoreMutation.written.get();
+
+                    // TODO: I think this is acceptable as our consistency is
+                    // local first.
+                    await datastoreMutation.committed.get();
+
+                } catch (e) {
+                    console.error("beforeEach failed: ", e);
+                    throw e;
+                }
 
             });
 
             afterEach(async function() {
-                console.log("===== after test ====");
 
-                await Datastores.purge(persistenceLayer.datastore,
-                                       purgeEvent => console.log("Purged: ", purgeEvent));
+                try {
 
-                await persistenceLayer.stop();
+                    console.log("===== after test ====");
+
+                    await Datastores.purge(persistenceLayer.datastore,
+                                           purgeEvent => console.log("Purged: ", purgeEvent));
+
+                    await persistenceLayer.stop();
+
+                } catch (e) {
+                    console.error("afterEach failed: ", e);
+                    throw e;
+                }
+
             });
 
             it("write and read data to disk", async function() {
@@ -115,6 +142,17 @@ export class DatastoreTester {
                 assert.equal(isPresent(docMeta0), true, "docMeta0 is not present");
 
                 assertJSON(Dictionaries.sorted(docMeta), Dictionaries.sorted(docMeta0));
+
+            });
+
+
+
+            it("data contains no whitespace", async function() {
+
+                const data = await datastore.getDocMeta(fingerprint);
+
+                assert.isNotNull(data);
+                assert.equal(data!.indexOf("\n"), -1);
 
             });
 
@@ -186,10 +224,8 @@ export class DatastoreTester {
 
                 assert.ok(await datastore.containsFile(Backend.IMAGE, fileRef));
 
-                const datastoreFile = await datastore.getFile(Backend.IMAGE, fileRef);
+                const datastoreFile = datastore.getFile(Backend.IMAGE, fileRef);
                 assert.ok(datastoreFile, "no result");
-                assert.ok(datastoreFile.isPresent(), "not present");
-                assert.ok(datastoreFile.get(), "no value");
 
                 // noinspection TsLint
                 // assert.equal(datastoreFile.get().meta['foo'], 'bar');
@@ -198,6 +234,7 @@ export class DatastoreTester {
                 // differ");
 
                 await datastore.deleteFile(Backend.IMAGE, fileRef);
+                // make sure we're idempotent for our writes.
                 await datastore.deleteFile(Backend.IMAGE, fileRef);
 
             });
@@ -209,6 +246,15 @@ export class DatastoreTester {
                 assert.equal(docMetaFiles.length > 0, true);
 
                 assert.equal(docMetaFiles.map((current) => current.fingerprint).includes(fingerprint), true);
+
+            });
+
+            it("overview", async function() {
+
+                // right now just make sure we can call it and that the value
+                // it returns is is not undefined.
+                const overview = await datastore.overview();
+                assert.isDefined(overview);
 
             });
 

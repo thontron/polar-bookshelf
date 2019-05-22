@@ -1,14 +1,15 @@
 import {IXYRect} from '../../util/rects/IXYRect';
 import {IXYRects} from '../../util/rects/IXYRects';
-import {CapturedScreenshot, CaptureOpts} from '../CapturedScreenshot';
-import {ScreenshotRequest} from '../CapturedScreenshot';
-import {DefaultCaptureOpts} from '../CapturedScreenshot';
+import {Screenshot, CaptureOpts} from '../Screenshot';
+import {ScreenshotRequest} from '../Screenshot';
+import {DefaultCaptureOpts} from '../Screenshot';
 import {ClientRects} from '../../util/rects/ClientRects';
 import {Logger} from '../../logger/Logger';
 import {IScreenshotDelegate, ScreenshotDelegate, WebContentsID} from './ScreenshotDelegate';
 import {remote} from 'electron';
 import {AppRuntime} from '../../AppRuntime';
 import {Promises} from '../../util/Promises';
+import {AnnotationToggler} from '../AnnotationToggler';
 
 const log = Logger.create();
 
@@ -39,7 +40,7 @@ export class ElectronScreenshots {
      *
      */
     public static async capture(target: CaptureTarget,
-                                opts: CaptureOpts = new DefaultCaptureOpts()): Promise<CapturedScreenshot> {
+                                opts: CaptureOpts = new DefaultCaptureOpts()): Promise<Screenshot> {
 
         if ( ! this.supported()) {
             throw new Error("Captured screenshots not supported");
@@ -67,13 +68,7 @@ export class ElectronScreenshots {
 
         const annotationToggler = new AnnotationToggler();
 
-        // TODO: this should be the PROPER way to do this but on my machine
-        // this still doesn't work.
-        await Promises.requestAnimationFrame(() => annotationToggler.hide());
-
-        // wait for at least 1/60th of a second which is the duration that most
-        // machines target.  This is probably too long in practice though.
-        await Promises.waitFor(MIN_PAINT_INTERVAL);
+        await annotationToggler.hide();
 
         const capturedScreenshot
             = await this.getRemoteDelegate().capture(id, screenshotRequest);
@@ -153,44 +148,5 @@ export interface StyleRestore {
 export interface AnnotationStyle {
     readonly element: HTMLElement;
     readonly styleRestore: StyleRestore;
-}
-
-export class AnnotationToggler {
-
-    private SELECTOR = ".page .pagemark, .page .text-highlight, .page .area-highlight";
-
-    private annotationStyles: AnnotationStyle[] = [];
-
-    private getAnnotationElements(): ReadonlyArray<HTMLElement> {
-        return Array.from(document.querySelectorAll(this.SELECTOR));
-    }
-
-    public hide() {
-
-        for (const annotationElement of this.getAnnotationElements()) {
-
-            const styleRestore: StyleRestore = {
-                visibility: annotationElement.style.visibility
-            };
-
-            annotationElement.style.visibility = 'hidden';
-
-            this.annotationStyles.push({element: annotationElement, styleRestore});
-
-        }
-
-    }
-
-    public show() {
-
-        for (const annotationStyle of this.annotationStyles) {
-
-            annotationStyle.element.style.visibility =
-                annotationStyle.styleRestore.visibility;
-
-        }
-
-    }
-
 }
 

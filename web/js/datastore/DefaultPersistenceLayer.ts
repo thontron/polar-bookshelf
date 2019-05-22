@@ -165,12 +165,13 @@ export class DefaultPersistenceLayer implements PersistenceLayer {
         // NOTE that we always write the state with JSON pretty printing.
         // Otherwise tools like git diff , etc will be impossible to deal with
         // in practice.
-        const data = DocMetas.serialize(docMeta);
+        const data = DocMetas.serialize(docMeta, "");
 
         const docInfo = Object.assign({}, docMeta.docInfo);
 
         const syncMutation = new DefaultDatastoreMutation<boolean>();
-        this.datastoreMutations.pipe(syncMutation, datastoreMutation, () => docInfo);
+
+        DatastoreMutations.pipe(syncMutation, datastoreMutation, () => docInfo);
 
         const writeOpts = {
             ...opts,
@@ -212,7 +213,7 @@ export class DefaultPersistenceLayer implements PersistenceLayer {
         return this.datastore.containsFile(backend, ref);
     }
 
-    public getFile(backend: Backend, ref: FileRef, opts?: GetFileOpts): Promise<Optional<DocFileMeta>> {
+    public getFile(backend: Backend, ref: FileRef, opts?: GetFileOpts): DocFileMeta {
         return this.datastore.getFile(backend, ref, opts);
     }
 

@@ -6,6 +6,7 @@ import {DocAnnotationIndex} from './DocAnnotationIndex';
 import {assertJSON} from '../test/Assertions';
 import {TextHighlights} from '../metadata/TextHighlights';
 import {TestingTime} from '../test/TestingTime';
+import {ObjectIDs} from '../util/ObjectIDs';
 
 describe('DocAnnotationIndexes', function() {
 
@@ -29,9 +30,9 @@ describe('DocAnnotationIndexes', function() {
         const expected: any = {
             "annotationType": "TEXT_HIGHLIGHT",
             "children": [],
-            "comments": [],
             "created": "2009-06-15T13:45:30",
             "id": "0001",
+            "oid": 0,
             "original": {
                 "color": "yellow",
                 "created": "2012-03-02T11:38:49.321Z",
@@ -63,6 +64,7 @@ describe('DocAnnotationIndexes', function() {
                 }
             },
             "pageMeta": null,
+            "docMeta": null,
             "pageNum": 1,
             "position": {
                 "x": 0,
@@ -90,6 +92,7 @@ describe('DocAnnotationIndexes', function() {
 
         const expected: any = [
             {
+                "oid": 5,
                 "id": "0003",
                 "annotationType": "TEXT_HIGHLIGHT",
                 "pageNum": 1,
@@ -99,8 +102,8 @@ describe('DocAnnotationIndexes', function() {
                 },
                 "created": "2009-06-15T13:45:30",
                 "pageMeta": null,
+                "docMeta": null,
                 "children": [],
-                "comments": [],
                 "original": {
                     "id": "12pNUv1Y9S",
                     "guid": "12pNUv1Y9S",
@@ -133,6 +136,7 @@ describe('DocAnnotationIndexes', function() {
                 }
             },
             {
+                "oid": 4,
                 "id": "0002",
                 "annotationType": "TEXT_HIGHLIGHT",
                 "pageNum": 2,
@@ -142,8 +146,8 @@ describe('DocAnnotationIndexes', function() {
                 },
                 "created": "2009-06-15T13:45:30",
                 "pageMeta": null,
+                "docMeta": null,
                 "children": [],
-                "comments": [],
                 "original": {
                     "id": "12pNUv1Y9S",
                     "guid": "12pNUv1Y9S",
@@ -176,6 +180,7 @@ describe('DocAnnotationIndexes', function() {
                 }
             },
             {
+                "oid": 3,
                 "id": "0001",
                 "annotationType": "TEXT_HIGHLIGHT",
                 "pageNum": 3,
@@ -185,8 +190,8 @@ describe('DocAnnotationIndexes', function() {
                 },
                 "created": "2009-06-15T13:45:30",
                 "pageMeta": null,
+                "docMeta": null,
                 "children": [],
-                "comments": [],
                 "original": {
                     "id": "12pNUv1Y9S",
                     "guid": "12pNUv1Y9S",
@@ -247,7 +252,6 @@ describe('DocAnnotationIndexes', function() {
         DocAnnotationIndexes.computeScore(d1);
 
 
-
     });
 
 });
@@ -260,6 +264,7 @@ function createAnnotation(id: string,
     const textHighlight = TextHighlights.createMockTextHighlight();
 
     return {
+        oid: ObjectIDs.create(),
         id,
         annotationType: AnnotationType.TEXT_HIGHLIGHT,
         pageNum,
@@ -269,8 +274,8 @@ function createAnnotation(id: string,
         },
         created: '2009-06-15T13:45:30',
         pageMeta: null!,
+        docMeta: null!,
         children: [],
-        comments: [],
         original: textHighlight
     };
 
@@ -740,4 +745,4 @@ const BROKEN = [
             "color": "red"
         }
     }
-]
+];

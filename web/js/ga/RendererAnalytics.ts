@@ -61,7 +61,7 @@ export class RendererAnalytics {
     public static event(args: IEventArgs): void {
 
         if (! isBrowserContext) {
-            log.warn("Not called from browser context");
+            // log.warn("Not called from browser context");
             return;
         }
 
@@ -71,7 +71,7 @@ export class RendererAnalytics {
 
         // log.debug("Sending analytics event: ", args);
 
-        // FIXME: screenResolution (sr) and viewportSize (vp)
+        // TODO: screenResolution (sr) and viewportSize (vp)
         //
         // https://github.com/peaksandpies/universal-analytics/blob/master/AcceptableParams.md
 

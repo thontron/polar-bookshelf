@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Logger} from '../../../../web/js/logger/Logger';
 import {RepoDocMetaLoader} from '../RepoDocMetaLoader';
 import {RepoDocMetaManager} from '../RepoDocMetaManager';
 import {FilteredTags} from '../FilteredTags';
@@ -12,15 +11,12 @@ import {RepoHeader} from '../repo_header/RepoHeader';
 import {MessageBanner} from '../MessageBanner';
 import {RepoAnnotation} from '../RepoAnnotation';
 import {RepoAnnotationMetaView} from './RepoAnnotationMetaView';
-import {FixedNav, FixedNavBody} from '../FixedNav';
-import {AddContentButton} from '../ui/AddContentButton';
+import {FixedNav} from '../FixedNav';
 import {AnnotationRepoFilterBar} from './AnnotationRepoFilterBar';
-import {AddContentActions} from '../ui/AddContentActions';
 import {ChannelFunction, Channels} from '../../../../web/js/util/Channels';
 import {ChannelCoupler} from '../../../../web/js/util/Channels';
 import {AnnotationRepoFilters} from './AnnotationRepoFiltersHandler';
-
-const log = Logger.create();
+import {Dock} from '../../../../web/js/ui/dock/Dock';
 
 export default class AnnotationRepoApp extends React.Component<IProps, IState> {
 
@@ -55,73 +51,78 @@ export default class AnnotationRepoApp extends React.Component<IProps, IState> {
 
         return (
 
-            <FixedNav id="doc-repository" className="annotations-view">
+            <FixedNav id="doc-repository"
+                      className="annotations-view">
 
                 <header>
                     <RepoHeader persistenceLayerManager={this.props.persistenceLayerManager}/>
 
-                    <div id="header-filter" className="mt-1">
+                    {/*<div id="header-filter" className="mt-1">*/}
 
-                        <div style={{display: 'flex'}}>
+                    {/*    <div style={{display: 'flex'}}>*/}
 
-                            <div className=""
-                                 style={{
-                                     whiteSpace: 'nowrap',
-                                     marginTop: 'auto',
-                                     marginBottom: 'auto',
-                                     display: 'flex'
-                                 }}>
+                    {/*        <div className=""*/}
+                    {/*             style={{*/}
+                    {/*                 whiteSpace: 'nowrap',*/}
+                    {/*                 marginTop: 'auto',*/}
+                    {/*                 marginBottom: 'auto',*/}
+                    {/*                 display: 'flex'*/}
+                    {/*             }}>*/}
 
-                                <AddContentButton importFromDisk={() => AddContentActions.cmdImportFromDisk()}
-                                                  captureWebPage={() => AddContentActions.cmdCaptureWebPage()}/>
+                    {/*            <AddContentButton importFromDisk={() => AddContentActions.cmdImportFromDisk()}*/}
+                    {/*                              captureWebPage={() => AddContentActions.cmdCaptureWebPage()}/>*/}
 
-                            </div>
+                    {/*        </div>*/}
 
-                            <div style={{marginLeft: 'auto'}}>
+                    {/*        <div style={{marginLeft: 'auto'}}>*/}
 
-                                <AnnotationRepoFilterBar tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}
-                                                         onFiltered={filters => this.filterChannel(filters)}
-                                                         right={
-                                                             <div/>
-                                                          }
-                                />
+                    {/*        </div>*/}
 
-                            </div>
+                    {/*    </div>*/}
 
-                        </div>
-
-                    </div>
+                    {/*</div>*/}
 
                     <MessageBanner/>
 
                 </header>
 
-                <div style={{display: 'flex'}}>
+                <Dock left={
+                        <div style={{display: 'flex' , flexDirection: 'column', height: '100%'}}>
 
-                    <div className="ml-1"
-                         style={{width: 'calc(100% - 350px)'}}>
+                            <div className="mb-1 mt-1">
 
-                        <FixedNavBody>
+                                <AnnotationRepoFilterBar tagsDBProvider={() => this.props.repoDocMetaManager!.tagsDB}
+                                                         onFiltered={filters => this.filterChannel(filters)}
+                                                         tagPopoverPlacement="bottom-end"
+                                                         right={
+                                                             <div/>
+                                                         }
+                                />
 
-                            <AnnotationRepoTable persistenceLayerManager={this.props.persistenceLayerManager}
-                                                 updatedDocInfoEventDispatcher={this.props.updatedDocInfoEventDispatcher}
-                                                 repoDocMetaManager={this.props.repoDocMetaManager}
-                                                 repoDocMetaLoader={this.props.repoDocMetaLoader}
-                                                 setFiltered={this.setFilterChannel}
-                                                 onSelected={repoAnnotation => this.onRepoAnnotationSelected(repoAnnotation)}/>
+                            </div>
 
-                        </FixedNavBody>
+                            <div style={{flexGrow: 1, overflowY: 'auto'}}>
 
-                    </div>
+                                <AnnotationRepoTable persistenceLayerManager={this.props.persistenceLayerManager}
+                                                     updatedDocInfoEventDispatcher={this.props.updatedDocInfoEventDispatcher}
+                                                     repoDocMetaManager={this.props.repoDocMetaManager}
+                                                     repoDocMetaLoader={this.props.repoDocMetaLoader}
+                                                     setFiltered={this.setFilterChannel}
+                                                     onSelected={repoAnnotation => this.onRepoAnnotationSelected(repoAnnotation)}/>
 
-                    <div className="mt-2 pl-1 pr-1"
-                         style={{width: '350px'}}>
-                        <RepoAnnotationMetaView persistenceLayerManager={this.props.persistenceLayerManager}
-                                                repoAnnotation={this.state.repoAnnotation}/>
-                    </div>
+                            </div>
 
-
-                </div>
+                        </div>
+                      }
+                      right={
+                          <div className="mt-2 pl-1 pr-1"
+                               style={{}}>
+                              <RepoAnnotationMetaView persistenceLayerManager={this.props.persistenceLayerManager}
+                                                      repoAnnotation={this.state.repoAnnotation}/>
+                          </div>
+                      }
+                      side='left'
+                      initialWidth={450}/>
 
             </FixedNav>
 

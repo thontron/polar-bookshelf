@@ -1,7 +1,7 @@
 productName: Polar Bookshelf
 # TODO: unfortunately this needs to be set.  Not sure why but it reverted to
 # using nightly versions when not set.  It should use package.json
-electronVersion: 5.0.0
+electronVersion: 5.0.1
 appId: io.inputneuron/polar
 compression: normal
 npmRebuild: false
@@ -87,6 +87,8 @@ snap:
     - { "gtk-3-themes": { "interface": "content", "target": "$SNAP/data-dir/themes", "default-provider": "gtk-common-themes:gtk-3-themes" }, }
     - { "icon-themes": { "interface": "content", "target": "$SNAP/data-dir/icons", "default-provider": "gtk-common-themes:icon-themes" }, }
     - { "sound-themes": { "interface": "content", "target": "$SNAP/data-dir/sounds", "default-provider": "gtk-common-themes:sounds-themes" }, }
+    # NOTE that this requires manual approval via snapcraft...
+    #- { "browser-sandbox": { "interface": "browser-support", "allow-sandbox": true }, }
   environment:
     DISABLE_WAYLAND: 1 #use XWayland
 
@@ -97,3 +99,4 @@ publish:
   publishAutoUpdate: true
 
 asar: true
+afterPack: "./electron-builder-afterpack.js"

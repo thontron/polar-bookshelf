@@ -1,6 +1,7 @@
 import {Hashcodes} from '../Hashcodes';
 import {Preconditions} from '../Preconditions';
 import {AreaHighlight} from './AreaHighlight';
+import {IAreaHighlight} from './AreaHighlight';
 import {ISODateTimeString, ISODateTimeStrings} from './ISODateTimeStrings';
 import {DocMeta} from './DocMeta';
 import {Image} from './Image';
@@ -17,16 +18,60 @@ import {PageMeta} from './PageMeta';
 import {AreaHighlightRect} from './AreaHighlightRect';
 import {HighlightRects} from './BaseHighlight';
 import {Position} from "./BaseHighlight";
-import {DatastoreFileCache} from '../datastore/HybridRemoteDatastore';
-import {ExtractedImage} from '../screenshots/CapturedScreenshot';
-import {CapturedScreenshots} from '../screenshots/CapturedScreenshots';
+import {DatastoreFileCache} from '../datastore/DatastoreFileCache';
+import {ExtractedImage} from '../screenshots/Screenshot';
+import {Screenshots} from '../screenshots/Screenshots';
 import {Dimensions} from '../util/Dimensions';
 import {DocFormatFactory} from '../docformat/DocFormatFactory';
 import {ILTRect} from '../util/rects/ILTRect';
+import {DataURLs} from '../util/DataURLs';
+import {Rect} from '../Rect';
+import {Rects} from '../Rects';
 
 const log = Logger.create();
 
 export class AreaHighlights {
+
+    public static update(id: string,
+                         docMeta: DocMeta,
+                         pageMeta: PageMeta,
+                         updates: Partial<IAreaHighlight>) {
+
+        const existing = pageMeta.areaHighlights[id]!;
+
+        if (!existing) {
+            throw new Error("No existing for id: " + id);
+        }
+
+        const updated = new AreaHighlight({...existing, ...updates});
+
+        DocMetas.withBatchedMutations(docMeta, () => {
+            // delete pageMeta.areaHighlights[id];
+            pageMeta.areaHighlights[id] = updated;
+        });
+
+    }
+
+    public static toCorrectScale(overlayRect: Rect) {
+
+        const docFormat = DocFormatFactory.getInstance();
+
+        if (docFormat.name === "pdf") {
+            const currentScale = docFormat.currentScale();
+
+            // we have to scale these number BACK to their original
+            // positions at 100%
+
+            const rescaleFactor = 1 / currentScale;
+
+            overlayRect = Rects.scale(Rects.createFromBasicRect(overlayRect), rescaleFactor);
+
+        }
+
+        return overlayRect;
+
+
+    }
 
     public static createID(created: ISODateTimeString) {
         // TODO: this needs some unique data and random is probably find.
@@ -71,7 +116,7 @@ export class AreaHighlights {
         // TODO: this is a problem because the area highlight isn't created
         // until we mutate it in the JSON..
         const extractedImage
-            = await CapturedScreenshots.capture(pageNum, boxRect, target);
+            = await Screenshots.capture(pageNum, boxRect, target);
 
         const overlayRect = areaHighlightRect.toDimensions(pageDimensions);
 
@@ -101,7 +146,7 @@ export class AreaHighlights {
         return writtenAreaHighlight;
     }
 
-    private static computePageDimensions(pageNum: number): PageDimensions {
+    public static computePageDimensions(pageNum: number): PageDimensions {
 
         const docFormat = DocFormatFactory.getInstance();
 
@@ -125,10 +170,18 @@ export class AreaHighlights {
 
     public static async delete(opts: AreaHighlightDeleteOpts) {
 
-        const {datastore, pageMeta, areaHighlight} = opts;
+        const {datastore, docMeta, pageMeta, areaHighlight} = opts;
         const {image} = areaHighlight;
 
-        delete pageMeta.areaHighlights[areaHighlight.id];
+        DocMetas.withBatchedMutations(docMeta, () => {
+
+            delete pageMeta.areaHighlights[areaHighlight.id];
+
+            if (image) {
+                delete docMeta.docInfo.attachments[image.id];
+            }
+
+        });
 
         if (image) {
             await datastore.deleteFile(image.src.backend, image.src);
@@ -227,7 +280,17 @@ class DefaultAreaHighlightWriter implements AreaHighlightWriter {
             src: fileRef,
         });
 
-        const blob = ArrayBuffers.toBlob(extractedImage.data);
+        const toBlob = () => {
+
+            if (typeof extractedImage.data === 'string') {
+                return DataURLs.toBlob(extractedImage.data);
+            } else {
+                return ArrayBuffers.toBlob(extractedImage.data);
+            }
+
+        };
+
+        const blob = toBlob();
 
         const blobURL = URL.createObjectURL(blob);
 
@@ -256,6 +319,10 @@ class DefaultAreaHighlightWriter implements AreaHighlightWriter {
                 position,
                 lastUpdated: ISODateTimeStrings.create()
             });
+
+            // it's important that we delete first so that the ABSENT event is
+            // fired
+            delete pageMeta.areaHighlights[areaHighlight.id];
 
             pageMeta.areaHighlights[newAreaHighlight.id] = newAreaHighlight!;
 

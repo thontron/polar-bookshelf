@@ -19,8 +19,85 @@ export class WhatsNewContent extends React.Component<IProps, IState> {
 
                 <div>
 
+                    {/*<div className="intro">*/}
+                    {/*    <CrowdfundingCampaign/>*/}
+                    {/*</div>*/}
+
+
+                    <h3>Polar 1.19.0</h3>
+
                     <div className="intro">
-                        <CrowdfundingCampaign/>
+
+                        <p className="text-center">
+                            <iframe className="embed-responsive-item"
+                                    width="560"
+                                    height="315"
+                                    src="https://www.youtube.com/embed/Q5SU31cT4DQ"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen></iframe>
+                        </p>
+
+                        <p>
+                            Polar 1.19 has been a lot of work but it's finally out the door.
+
+                            There are a few we want to highlight about this release.
+                        </p>
+
+                        <b>Area Highlights</b>
+
+                        <p>
+                            Area highlights are now shown in the sidebar and
+                            updated and resized while you drag the area
+                            highlight box.
+                        </p>
+
+                        <b>Updated Annotations View</b>
+
+                        <p>
+                            We've updated the annotations view to show
+                            preview annotations and a better view of each
+                            annotation including showing area highlights.
+                        </p>
+
+                        <b>Color Selector</b>
+
+                        <p>
+                            There's now an advanced color selector for highlights
+                            and this expands us to 12 different colors.  We're going
+                            to expand the palette in the future but this is already
+                            a step in the right directly.
+                        </p>
+
+                        <p>
+                            Technically we support any RGB value but we're
+                            limiting the colors you can select for now just to
+                            make the UI simpler and easy to use.
+                        </p>
+
+                        <b>Performance Improvements</b>
+
+                        <p>
+                            We've also implemented some more major performance
+                            improvements when working with larger documents and
+                            larger sets of annotations.
+                        </p>
+
+                        <b>Native PDF Handling in Web Extension Disabled</b>
+
+                        <p>
+                            We've had to remove the native PDF handling in our web extension.
+                        </p>
+
+                        <p>
+                            This feature automatically previewed and added a
+                            PDF to the Polar webapp while browsing.
+                        </p>
+
+                        <p>We had to disable it due to cross domain security
+                        issues we weren't able to fix. This might be enabled
+                        again in a future version of Polar.</p>
+
                     </div>
 
 

@@ -3,7 +3,6 @@ import {Logger} from "../../../../logger/Logger";
 import {DocFormatFactory} from "../../../../docformat/DocFormatFactory";
 import {Component} from "../../../../components/Component";
 import {forDict} from "../../../../util/Functions";
-import {Dimensions} from "../../../../util/Dimensions";
 import {AreaHighlight} from "../../../../metadata/AreaHighlight";
 import {Position} from "../../../../metadata/BaseHighlight";
 import {AnnotationRects} from "../../../../metadata/AnnotationRects";
@@ -18,9 +17,13 @@ import {PersistenceLayerProvider} from '../../../../datastore/PersistenceLayer';
 import {AsyncSerializer} from '../../../../util/AsyncSerializer';
 import {AreaHighlights} from '../../../../metadata/AreaHighlights';
 import {AreaHighlightWriteOpts} from '../../../../metadata/AreaHighlights';
-import {CapturedScreenshots} from '../../../../screenshots/CapturedScreenshots';
-import {Arrays} from '../../../../util/Arrays';
 import {DoWriteOpts} from '../../../../metadata/AreaHighlights';
+import {Screenshots} from '../../../../screenshots/Screenshots';
+import {Arrays} from '../../../../util/Arrays';
+import {HighlightColors} from '../../../../metadata/HighlightColor';
+import {HighlightColor} from '../../../../metadata/HighlightColor';
+import {ILTRect} from '../../../../util/rects/ILTRect';
+import {Rects} from '../../../../Rects';
 
 const log = Logger.create();
 
@@ -49,17 +52,9 @@ export class AreaHighlightComponent extends Component {
         this.annotationEvent = annotationEvent;
         this.areaHighlight = annotationEvent.value;
 
-        // FIXME: need to create the FIRST screenshot when this is created.
-
         this.boxController = new BoxController(boxMoveEvent => this.onBoxMoved(boxMoveEvent));
 
-
-
-
-
     }
-
-    // FIXME: this MUST be called after the first render();
 
     private async captureFirstScreenshot() {
 
@@ -70,9 +65,9 @@ export class AreaHighlightComponent extends Component {
         const areaHighlightRect = AreaHighlightRects.createFromRect(rect!);
         const pageNum = pageMeta.pageInfo.num;
 
-        const {pageDimensions} = this.computePageDimensions(pageNum);
+        const {pageDimensions} = AreaHighlights.computePageDimensions(pageNum);
 
-        const boxRect = areaHighlightRect.toDimensions(pageDimensions);
+        const boxRect = areaHighlightRect.toDimensionsFloor(pageDimensions);
 
         const target = <HTMLElement> document.getElementById(this.createID());
 
@@ -100,8 +95,6 @@ export class AreaHighlightComponent extends Component {
 
         // TODO: actually I think this belongs in the controller... not the view
 
-        //  FIXME: I think I can bet boxRect target just by querySelector
-
         const annotationRect = AnnotationRects.createFromPositionedRect(boxMoveEvent.boxRect,
                                                                         boxMoveEvent.restrictionRect);
 
@@ -117,18 +110,24 @@ export class AreaHighlightComponent extends Component {
 
             const {boxRect, target} = boxMoveEvent;
 
-            console.log("FIXME boxRect: ", JSON.stringify(boxRect, null, "  "));
-
             const doWrite = async () => {
 
-                const {pageDimensions} = this.computePageDimensions(pageNum);
+                const {pageDimensions} = AreaHighlights.computePageDimensions(pageNum);
 
                 // TODO: this is a problem because the area highlight isn't created
                 // until we mutate it in the JSON..
                 const extractedImage
-                    = await CapturedScreenshots.capture(pageNum, boxRect, target);
+                    = await Screenshots.capture(pageNum, boxRect, target);
 
-                const overlayRect = areaHighlightRect.toDimensions(pageDimensions);
+                const toOverlayRect = () => {
+
+                    let overlayRect = areaHighlightRect.toDimensions(pageDimensions);
+                    overlayRect = AreaHighlights.toCorrectScale(overlayRect);
+                    return overlayRect;
+
+                };
+
+                const overlayRect = toOverlayRect();
 
                 const position: Position = {
                     x: overlayRect.left,
@@ -137,12 +136,14 @@ export class AreaHighlightComponent extends Component {
                     height: overlayRect.height,
                 };
 
+                const rect = areaHighlightRect;
+
                 const writeOpts: AreaHighlightWriteOpts = {
                     datastore: this.persistenceLayerProvider(),
                     docMeta,
                     pageMeta,
                     areaHighlight,
-                    rect: areaHighlightRect,
+                    rect,
                     position,
                     extractedImage
                 };
@@ -158,7 +159,7 @@ export class AreaHighlightComponent extends Component {
             };
 
             this.asyncSerializer.execute(async () => await doWrite())
-                .catch(err => log.error("Unable to write to datastore: ", err));
+                .catch(err => log.error("Unable to update screenshot: ", err));
 
         } else {
             // noop
@@ -189,12 +190,44 @@ export class AreaHighlightComponent extends Component {
         // other container PDF.js breaks.
         const containerElement = this.docFormat.getPageElementFromPageNum(pageNum);
 
-        const {pageDimensions, dimensionsElement} = this.computePageDimensions(pageNum);
+        const {pageDimensions, dimensionsElement} = AreaHighlights.computePageDimensions(pageNum);
+
+        const color: HighlightColor = areaHighlight.color || 'yellow';
+
+        const backgroundColor = HighlightColors.toBackgroundColor(color, 0.5);
 
         forDict(areaHighlight.rects, (key, rect) => {
 
+            const toOverlayRect = (): ILTRect => {
+
+                if (areaHighlight.position) {
+
+                    let overlayRect = {
+                        left: areaHighlight.position.x,
+                        top: areaHighlight.position.y,
+                        width: areaHighlight.position.width,
+                        height: areaHighlight.position.height
+                    };
+
+                    if (this.docFormat.name === "pdf") {
+                        const currentScale = this.docFormat.currentScale();
+                        overlayRect = Rects.scale(Rects.createFromBasicRect(overlayRect), currentScale);
+                    }
+
+                    return overlayRect;
+
+                }
+
+                // TODO: This is for OLDER area highlights but these will be
+                // deprecated pretty soon as they're not really used very much
+                // I imagine.
+
+                return areaHighlightRect.toDimensions(pageDimensions);
+
+            };
+
             const areaHighlightRect = AreaHighlightRects.createFromRect(rect);
-            const overlayRect = areaHighlightRect.toDimensions(pageDimensions);
+            const overlayRect = toOverlayRect();
 
             log.debug("Rendering annotation at: " + JSON.stringify(overlayRect, null, "  "));
 
@@ -237,16 +270,9 @@ export class AreaHighlightComponent extends Component {
             highlightElement.className = `area-highlight annotation area-highlight-${areaHighlight.id}`;
 
             highlightElement.style.position = "absolute";
-            highlightElement.style.backgroundColor = `yellow`;
-            highlightElement.style.opacity = `0.5`;
+            highlightElement.style.backgroundColor = backgroundColor;
             (highlightElement.style as any).mixBlendMode = 'multiply';
             highlightElement.style.border = `1px solid #c6c6c6`;
-
-            // if(this.docFormat.name === "pdf") {
-            //     // this is only needed for PDF and we might be able to use a
-            // transform // in the future which would be easier. let
-            // currentScale = this.docFormat.currentScale(); overlayRect =
-            // Rects.scale(overlayRect, currentScale); }
 
             highlightElement.style.left = `${overlayRect.left}px`;
             highlightElement.style.top = `${overlayRect.top}px`;
@@ -260,30 +286,10 @@ export class AreaHighlightComponent extends Component {
 
         if (! this.areaHighlight!.image) {
 
-            // FIXME: this now works but the image is blurry...
-
             this.captureFirstScreenshot()
-                .catch(err => log.error("Unable to write to datastore: ", err));
+                .catch(err => log.error("Unable to capture first screenshot: ", err));
 
         }
-
-
-    }
-
-    // FIXME: remove this
-    private computePageDimensions(pageNum: number): PageDimensions {
-
-        const pageElement = this.docFormat.getPageElementFromPageNum(pageNum);
-
-        const dimensionsElement
-            = <HTMLElement> pageElement.querySelector(".canvasWrapper, .iframeWrapper")!;
-
-        const pageDimensions = new Dimensions({
-            width: dimensionsElement.clientWidth,
-            height: dimensionsElement.clientHeight
-        });
-
-        return {pageDimensions, dimensionsElement};
 
     }
 
@@ -310,10 +316,4 @@ export class AreaHighlightComponent extends Component {
 
     }
 
-}
-
-// FIXME: remove this
-interface PageDimensions {
-    readonly pageDimensions: Dimensions;
-    readonly dimensionsElement: HTMLElement;
 }

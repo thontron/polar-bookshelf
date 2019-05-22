@@ -47,7 +47,7 @@
         "apps/**/*"
     ],
     "exclude": [
-
+        "web/spectron.disabled/*"
     ],
     "types": [
         "mocha",

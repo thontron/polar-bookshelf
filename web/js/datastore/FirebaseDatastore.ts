@@ -38,6 +38,7 @@ import {Promises} from '../util/Promises';
 import {URLs} from '../util/URLs';
 import {Datastores} from './Datastores';
 import {Latch} from '../util/Latch';
+import {Firebase} from '../firebase/Firebase';
 
 const log = Logger.create();
 
@@ -378,9 +379,7 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
 
                     log.info("File metadata updated with: ", meta);
 
-                    // TODO: I don't like having to call getFile again but hopefully
-                    // it should be cached at this point.
-                    return (await this.getFile(backend, ref)).get();
+                    return this.getFile(backend, ref);
 
                 } else {
                     // when the caller specifies null they mean that there's a
@@ -394,7 +393,7 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
                 // the file is already in the datastore so don't attempt to
                 // overwrite it for now.  The files are immutable and we don't
                 // accept overwrites.
-                return (await this.getFile(backend, ref)).get();
+                return this.getFile(backend, ref);
             }
 
             let uploadTask: firebase.storage.UploadTask;
@@ -515,9 +514,9 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
         return Hashcodes.create(storagePath.path);
     }
 
-    public async getFile(backend: Backend,
-                         ref: FileRef,
-                         opts: GetFileOpts = {}): Promise<Optional<DocFileMeta>> {
+    public getFile(backend: Backend,
+                   ref: FileRef,
+                   opts: GetFileOpts = {}): DocFileMeta {
 
         Datastores.assertNetworkLayer(this, opts.networkLayer);
 
@@ -530,15 +529,11 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
         const storageRef = storage.ref().child(storagePath.path);
 
         const downloadURL =
-            await DownloadURLs.computeDownloadURL(backend, ref, storagePath, storageRef, opts);
-
-        if (! downloadURL) {
-            return Optional.empty();
-        }
+            DownloadURLs.computeDownloadURL(backend, ref, storagePath, storageRef, opts);
 
         const url: string = this.wrappedDownloadURL(downloadURL);
 
-        return Optional.of({ backend, ref, url});
+        return { backend, ref, url};
 
     }
     /**
@@ -562,9 +557,9 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
         const storageRef = storage.ref().child(storagePath.path);
 
         const downloadURL =
-            await DownloadURLs.computeDownloadURL(backend, ref, storagePath, storageRef, {});
+            DownloadURLs.computeDownloadURL(backend, ref, storagePath, storageRef, {});
 
-        return isPresent(downloadURL);
+        return DownloadURLs.checkExistence(downloadURL);
 
     }
 
@@ -653,7 +648,15 @@ export class FirebaseDatastore extends AbstractDatastore implements Datastore, W
     }
 
     public async overview(): Promise<DatastoreOverview | undefined> {
-        return undefined;
+
+        const docMetaRefs = await this.getDocMetaRefs();
+        const user = await Firebase.currentUser();
+
+        return {
+            nrDocs: docMetaRefs.length,
+            created: user!.metadata.creationTime
+        };
+
     }
 
     public capabilities(): DatastoreCapabilities {
@@ -1284,22 +1287,30 @@ export type FirebaseDocMetaID = string;
 
 export class DownloadURLs {
 
-    /**
-     * Use the old getDownloadURL method which is not fast nor reliable.
-     */
-    private static USE_STORAGE_REF = false;
+    public static async checkExistence(url: string): Promise<boolean> {
 
-    public static async computeDownloadURL(backend: Backend,
-                                           ref: FileRef,
-                                           storagePath: StoragePath,
-                                           storageRef: firebase.storage.Reference,
-                                           opts: GetFileOpts): Promise<string | undefined> {
+        // This is pretty darn slow when using HEAD but with GET and a range
+        // query the performance isn't too bad.  Performing the HEAD directly
+        // is really poor with 300-7500ms latencies.  There are some major
+        // outliers when performing HEAD.
+        //
+        // Using GET and range of 0-0 is actually consistently about 200ms
+        // which is pretty reasonable but we stills should have the option
+        // to skip the exists check to just compute the URL.
+        //
+        // Doing an exists() with the Cloud SDK is about 250ms too.
 
-        if (this.USE_STORAGE_REF) {
-            return this.computeDownloadURLWithStorageRef(storageRef);
-        } else {
-            return this.computeDownloadURLDirectly(backend, ref, storagePath, opts);
-        }
+        return await URLs.existsWithGETUsingRange(url);
+
+    }
+
+    public static computeDownloadURL(backend: Backend,
+                                     ref: FileRef,
+                                     storagePath: StoragePath,
+                                     storageRef: firebase.storage.Reference,
+                                     opts: GetFileOpts): string {
+
+        return this.computeDownloadURLDirectly(backend, ref, storagePath, opts);
 
     }
 
@@ -1322,10 +1333,10 @@ export class DownloadURLs {
 
     }
 
-    private static async computeDownloadURLDirectly(backend: Backend,
-                                                    ref: FileRef,
-                                                    storagePath: StoragePath,
-                                                    opts: GetFileOpts): Promise<string | undefined> {
+    private static computeDownloadURLDirectly(backend: Backend,
+                                              ref: FileRef,
+                                              storagePath: StoragePath,
+                                              opts: GetFileOpts): string {
 
         /**
          * Compute the storage path including the flip over whether we're
@@ -1354,31 +1365,10 @@ export class DownloadURLs {
 
         };
 
-        const url = toURL();
-
-        if (opts.noExistenceCheck) {
-
-            // This is pretty darn slow when using HEAD but with GET and a range
-            // query the performance isn't too bad.  Performing the HEAD directly
-            // is really poor with 300-7500ms latencies.  There are some major
-            // outliers when performing HEAD.
-            //
-            // Using GET and range of 0-0 is actually consistently about 200ms
-            // which is pretty reasonable but we stills should have the option
-            // to skip the exists check to just compute the URL.
-            //
-            // Doing an exists() with the Cloud SDK is about 250ms too.
-
-            return url;
-
-        } else {
-            const exists = await URLs.existsWithGETUsingRange(url);
-
-            return exists ? url : undefined;
-
-        }
+        return toURL();
 
     }
+
 }
 
 interface GetDocMetaOpts {
