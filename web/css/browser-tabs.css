@@ -1,0 +1,37 @@
+
+.browser-tabs .nav-tabs {
+    background-color: #403F3C;
+    color: var(--grey100);
+    font-size: 16px !important;
+    font-family: "Arial", sans-serif;
+    display: flex;
+}
+
+.browser-tabs .nav-tabs .nav-item .active {
+    background-color: var(--grey000);
+}
+
+.browser-tabs .nav-tabs .nav-item .active .right-splitter {
+    border-right: 0;
+}
+
+.browser-tabs .nav-tabs li {
+    white-space: nowrap;
+    margin-left: 2px;
+    margin-right: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-wrap: nowrap;
+
+}
+
+.browser-tabs .nav-tabs .right-splitter {
+    border-right: 1px solid var(--grey200);
+    content: "hello";
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.browser-tabs .nav-tabs {
+    flex-wrap: nowrap;
+}
