@@ -6,6 +6,10 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
 
     constructor(props: IProps, context: any) {
         super(props, context);
+
+
+
+
     }
 
     public render() {
@@ -26,7 +30,10 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
             //    things are super fast and the main 'browser' is just a simple
             //    wrapper around webview
 
-            <TabNav addTabBinder={NULL_FUNCTION}
+            <div >
+
+            <TabNav
+                    addTabBinder={NULL_FUNCTION}
                     initialTabs={[
                         {
                             title: "Repository",
@@ -55,74 +62,167 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://cnn.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://msnbc.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://news.ycombinator.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
+                            content: "http://reddit.com"
                         },
                         {
                             title: "How to be Successful",
-                            content: "http://localhost:8500/htmlviewer/webview.html"
-                        }
-                    ]}/>
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
+                        {
+                            title: "How to be Successful",
+                            content: "http://reddit.com"
+                        },
 
+                    ]}/>
+            </div>
         );
 
     }

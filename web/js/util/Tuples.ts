@@ -1,6 +1,5 @@
 import {Preconditions} from '../Preconditions';
 import {Optional} from './ts/Optional';
-import {IArrayPosition} from './Functions';
 
 export class Tuples {
 
@@ -13,11 +12,11 @@ export class Tuples {
      * inside an iterative algorithm
      *
      */
-    public static createSiblings<T>(arr: ReadonlyArray<T>) {
+    public static createSiblings<T>(arr: ReadonlyArray<T>): ReadonlyArray<IEntryContext<T>> {
 
-        Preconditions.assertNotNull(arr, "arr");
+        Preconditions.assertPresent(arr, "arr");
 
-        const result: Array<IArrayElement<T>> = [];
+        const result: Array<IEntryContext<T>> = [];
 
         for (let idx = 0; idx < arr.length; ++idx) {
 
@@ -33,6 +32,21 @@ export class Tuples {
 
     }
 
+    public static firstMatching<T>(arr: ReadonlyArray<T>,
+                                   predicate: (input: T) => boolean): IEntryContext<T> | undefined {
+
+        const siblings = this.createSiblings(arr);
+
+        const filtered = siblings.filter(current => predicate(current.curr));
+
+        if (filtered.length !== 0) {
+            return filtered[0];
+        }
+
+        return undefined;
+
+    }
+
 }
 
 /**
@@ -41,7 +55,7 @@ export class Tuples {
  * objects.  The position allow sus to know where we currently are but also the
  * previous and future states.
  */
-export interface IArrayElement<T> {
+export interface IEntryContext<T> {
 
     readonly prev?: T;
 

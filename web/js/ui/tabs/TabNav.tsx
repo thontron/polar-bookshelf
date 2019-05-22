@@ -7,13 +7,19 @@ import Button from 'reactstrap/lib/Button';
 import {TabButtonContextMenu} from './TabButtonContextMenu';
 import {TabPanes} from './TabPanes';
 import {TabStyles} from './TabStyles';
+import {Either} from '../../util/Either';
+import {Tuples} from '../../util/Tuples';
+import {IEntryContext} from '../../util/Tuples';
 
 let tabSequence: number = 0;
 
 // TODO
 //
 // - fit the screen properly including the webview content
-// - disable the ability to close the primary tab
+// - disable the ability to close the primary tab... some tabs are required...
+//   closeOtherTabs won't work on them.
+//   keyboard bindings
+//   page up and page down...
 
 export class TabNav extends React.Component<IProps, IState> {
 
@@ -24,6 +30,9 @@ export class TabNav extends React.Component<IProps, IState> {
         this.addTab = this.addTab.bind(this);
         this.closeTab = this.closeTab.bind(this);
         this.closeOtherTabs = this.closeOtherTabs.bind(this);
+        this.nextTab = this.nextTab.bind(this);
+
+        this.onKeyDown = this.onKeyDown.bind(this);
 
         this.props.addTabBinder(tab => this.addTab(tab));
 
@@ -41,9 +50,25 @@ export class TabNav extends React.Component<IProps, IState> {
             tabs
         };
 
+        window.addEventListener('keydown', event => this.onKeyDown(event));
+
+    }
+
+    private onKeyDown(event: KeyboardEvent) {
+
+        if (event.code === 'KeyW' && event.ctrlKey) {
+            this.closeTab(Either.ofLeft(event));
+        }
+
+        if (event.code === 'PageDown' && event.ctrlKey) {
+            this.nextTab();
+        }
+
     }
 
     public render() {
+
+        console.log("FIXME render");
 
         const NavTabs = () => {
 
@@ -59,7 +84,7 @@ export class TabNav extends React.Component<IProps, IState> {
                                  className={tab.id === this.state.activeTab ? "border-bottom border-primary " : ""}>
 
                                 <TabButtonContextMenu onCloseOtherTabs={() => this.closeOtherTabs(tab.id)}
-                                                      onClose={() => this.closeTab(tab.id)}>
+                                                      onClose={() => this.closeTab(Either.ofRight(tab.id))}>
 
                                     <div className="mt-auto mb-auto pt-1 pb-1 pl-2 pr-1"
                                          style={{userSelect: 'none'}}
@@ -72,7 +97,7 @@ export class TabNav extends React.Component<IProps, IState> {
                                 <div className="mt-auto mb-auto mr-1">
 
                                     <Button color="link"
-                                            onClick={() => this.closeTab(tab.id)}
+                                            onClick={() => this.closeTab(Either.ofRight(tab.id))}
                                             className="text-muted p-1"
                                             style={{fontSize: '14px'}}>
                                         <i className="fas fa-times"></i>
@@ -93,7 +118,8 @@ export class TabNav extends React.Component<IProps, IState> {
 
         return (
 
-            <div className="tab-nav">
+            <div className="tab-nav"
+                 onKeyDown={(event) => console.log(event)}>
 
                     <NavTabs/>
 
@@ -123,13 +149,92 @@ export class TabNav extends React.Component<IProps, IState> {
 
     }
 
-    private closeTab(tab: number) {
+    private nextTab() {
 
-        // TODO: we have to pick a new activeTab now...
+        const computeTabOrder = (context: IEntryContext<Tab> | undefined): ReadonlyArray<Tab> => {
 
-        const tabs = this.state.tabs.filter(current => current.id !== tab);
+            const result: Tab[] = [];
 
-        this.setState({...this.state, tabs});
+            if  (! context) {
+                return result;
+            }
+
+            if (context.next) {
+                result.push(context.next);
+            }
+
+            if (context.prev) {
+                result.push(context.prev);
+            }
+
+            return result;
+
+        };
+
+        const currentTab = Tuples.firstMatching(this.state.tabs,
+                                                tab => tab.id === this.state.activeTab);
+
+        const tabOrder = computeTabOrder(currentTab);
+
+        if (tabOrder.length > 0) {
+
+            // FIXME: wrap...
+
+            this.setState({...this.state, activeTab: tabOrder[0].id});
+
+        }
+
+    }
+
+
+    private closeTab(input: Either<KeyboardEvent, number>) {
+
+        const event: KeyboardEvent | undefined = input.left;
+
+        const nextActiveTab = (context: IEntryContext<Tab> | undefined): number | undefined => {
+
+            if  (! context) {
+                return undefined;
+            }
+
+            if (context.next) {
+                return context.next.id;
+            }
+
+            if (context.prev) {
+                return context.prev.id;
+            }
+
+            return undefined;
+
+        };
+
+        const closeTabByID = (id: number) => {
+
+            const currentTab = Tuples.firstMatching(this.state.tabs, (tab: Tab) => tab.id === id);
+
+            const activeTab = nextActiveTab(currentTab);
+
+            const tabs = this.state.tabs.filter((tab: Tab) => tab.id !== id);
+
+            if (event) {
+                event.preventDefault();
+            }
+
+            if (activeTab) {
+                this.setState({...this.state, tabs, activeTab});
+            } else {
+                // TODO: what now?
+            }
+
+        };
+
+        if (input.hasLeft) {
+            closeTabByID(this.state.activeTab);
+        } else {
+            const id = input.right;
+            closeTabByID(id);
+        }
 
     }
 
@@ -188,9 +293,10 @@ export interface Tab extends TabInit {
  * this is even doable but I think if I set the height as 100vh that it will
  * work properly.
  */
-class ExternalContent {
-
-    constructor(public readonly href: string) {
-
-    }
-}
+// class ExternalContent {
+//
+//     constructor(public readonly href: string) {
+//
+//     }
+// }
+//

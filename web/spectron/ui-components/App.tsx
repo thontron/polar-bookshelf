@@ -164,28 +164,28 @@ class App<P> extends React.Component<{}, IAppState> {
         // const root: TNode<Tag> = TagNodes.create(...tags);
 
         return (
-
-            {/*<div style={{margin: '5px'}}>*/}
-
-            {/*    <SuggestionsModal/>*/}
-
-            {/*    /!*<TagTree tags={tags} onSelected={(...values: Tag[]) => console.log("selected: ", values)}/>*!/*/}
-
-            {/*    /!*<TreeView root={root}*!/*/}
-            {/*    /!*          />*!/*/}
-
-            {/*    /!*<Dock side="left"*!/*/}
-            {/*    /!*      left={<Folders/>}*!/*/}
-            {/*    /!*      right={<Dock side="left"*!/*/}
-            {/*    /!*                   left={<Preview/>}*!/*/}
-            {/*    /!*                   right={<Main/>}/>}/>*!/*/}
+            //
+            // {/*<div style={{margin: '5px'}}>*/}
+            //
+            // {/*    <SuggestionsModal/>*/}
+            //
+            // {/*    /!*<TagTree tags={tags} onSelected={(...values: Tag[]) => console.log("selected: ", values)}/>*!/*/}
+            //
+            // {/*    /!*<TreeView root={root}*!/*/}
+            // {/*    /!*          />*!/*/}
+            //
+            // {/*    /!*<Dock side="left"*!/*/}
+            // {/*    /!*      left={<Folders/>}*!/*/}
+            // {/*    /!*      right={<Dock side="left"*!/*/}
+            // {/*    /!*                   left={<Preview/>}*!/*/}
+            // {/*    /!*                   right={<Main/>}/>}/>*!/*/}
 
 
             <div>
                 {/*<FakeComponent0/>*/}
 
                 <FakeTabbedBrowser/>
-            {/*</div>*/}
+            </div>
 
         );
     }

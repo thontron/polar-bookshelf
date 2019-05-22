@@ -104,8 +104,27 @@
             background-color: #403F3C;
             color: lightgrey;
             font-size: 16px !important;
-            font-family: 'arial';
+            font-family: "Arial", sans-serif;
+            display: flex;
         }
+
+        /*.nav-tabs{*/
+        /*    display:inline-flex;*/
+        /*}*/
+        /*.nav-tabs li{*/
+        /*    margin-right: 10px;*/
+        /*    list-style-type:none;*/
+        /*}*/
+
+        .nav-tabs li {
+            white-space: nowrap;
+            margin-left: 2px;
+            margin-right: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-wrap: nowrap;
+        }
+
 
     </style>
 </head>
