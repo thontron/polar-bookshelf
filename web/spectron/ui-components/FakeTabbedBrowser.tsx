@@ -22,11 +22,13 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
             //
             // Features I need..
             //
-            //  - dark grey background
-            //  - close tabs with x button
             //  - everything should be a tab.. even the main repository app this
             //    things are super fast and the main 'browser' is just a simple
             //    wrapper around webview
+            //
+            //     - the problem is that a NEW window would need to be created
+            //       and this means another background sync.
+            //
             //  - ALL on one line but the
 
             <div>
