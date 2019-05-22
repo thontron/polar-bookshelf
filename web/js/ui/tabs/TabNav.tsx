@@ -94,6 +94,8 @@ export class TabNav extends React.Component<IProps, IState> {
                             <div style={{display: 'flex'}}
                                  className={tab.id === this.state.activeTab ? "border-bottom border-primary " : ""}>
 
+                                <div className="left-splitter"/>
+
                                 <TabButtonContextMenu onCloseOtherTabs={() => this.closeOtherTabs(tab.id)}
                                                       onClose={() => this.closeTab(Either.ofRight(tab.id))}>
 
@@ -118,6 +120,9 @@ export class TabNav extends React.Component<IProps, IState> {
                                     </Button>
 
                                 </div>
+
+                                <div className="right-splitter"/>
+
                             </div>
 
                         </NavLink>
@@ -132,7 +137,7 @@ export class TabNav extends React.Component<IProps, IState> {
 
         return (
 
-            <div className="tab-nav"
+            <div className="browser-tabs"
                  onKeyDown={(event) => console.log(event)}>
 
                     <NavTabs/>

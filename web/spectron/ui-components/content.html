@@ -100,28 +100,40 @@
             background-color: #F0F0F0;
         }
 
-        .nav-tabs {
+        .browser-tabs .nav-tabs {
             background-color: #403F3C;
-            color: lightgrey;
+            color: var(--grey100);
             font-size: 16px !important;
             font-family: "Arial", sans-serif;
             display: flex;
         }
 
-        /*.nav-tabs{*/
-        /*    display:inline-flex;*/
-        /*}*/
-        /*.nav-tabs li{*/
-        /*    margin-right: 10px;*/
-        /*    list-style-type:none;*/
-        /*}*/
+        .browser-tabs .nav-tabs .nav-item .active {
+            background-color: var(--grey000);
+        }
 
-        .nav-tabs li {
+        .browser-tabs .nav-tabs .nav-item .active .right-splitter {
+            border-right: 0;
+        }
+
+        .browser-tabs .nav-tabs li {
             white-space: nowrap;
             margin-left: 2px;
             margin-right: 2px;
             overflow: hidden;
             text-overflow: ellipsis;
+            flex-wrap: nowrap;
+
+        }
+
+        .browser-tabs .nav-tabs .right-splitter {
+            border-right: 1px solid var(--grey200);
+            content: "hello";
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+
+        .browser-tabs .nav-tabs {
             flex-wrap: nowrap;
         }
 

@@ -24,13 +24,12 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
             //
             //  - dark grey background
             //  - close tabs with x button
-            //  - context menu
-            //  - key bindings
             //  - everything should be a tab.. even the main repository app this
             //    things are super fast and the main 'browser' is just a simple
             //    wrapper around webview
+            //  - ALL on one line but the
 
-            <div >
+            <div>
 
             <TabNav
                     addTabBinder={NULL_FUNCTION}
