@@ -16,10 +16,7 @@ let tabSequence: number = 0;
 // TODO
 //
 // - fit the screen properly including the webview content
-// - disable the ability to close the primary tab... some tabs are required...
-//   closeOtherTabs won't work on them.
-//   keyboard bindings
-//   page up and page down...
+//   next and up do not work.. I need uniform wrapping
 
 export class TabNav extends React.Component<IProps, IState> {
 
@@ -99,8 +96,11 @@ export class TabNav extends React.Component<IProps, IState> {
                                     <Button color="link"
                                             onClick={() => this.closeTab(Either.ofRight(tab.id))}
                                             className="text-muted p-1"
+                                            disabled={tab.required}
                                             style={{fontSize: '14px'}}>
+
                                         <i className="fas fa-times"></i>
+
                                     </Button>
 
                                 </div>
@@ -240,7 +240,7 @@ export class TabNav extends React.Component<IProps, IState> {
 
     private closeOtherTabs(tab: number) {
 
-        const tabs = this.state.tabs.filter(current => current.id === tab);
+        const tabs = this.state.tabs.filter(current => current.id === tab || current.required);
         this.setState({...this.state, tabs, activeTab: tab});
 
     }
@@ -269,6 +269,12 @@ interface IState {
 }
 
 export interface TabInit {
+
+    /**
+     * This tab is required for the UI to properly function and should not be
+     * removed.
+     */
+    readonly required?: boolean;
 
     readonly title: string;
 
