@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {Tab} from './TabNav';
 import {TabStyles} from './TabStyles';
-import {ReactWebview} from './ReactWebview';
 
+// TODO: might want to make this a PureComponent
 export class TabBody extends React.Component<IProps, IState> {
 
     constructor(props: IProps, context: any) {

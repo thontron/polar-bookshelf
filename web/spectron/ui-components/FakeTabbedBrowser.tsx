@@ -62,12 +62,12 @@ export class FakeTabbedBrowser extends React.Component<IProps, IState> {
 
                             </div>
                         },
+                        // {
+                        //     title: "CNN",
+                        //     content: "http://cnn.com"
+                        // },
                         {
-                            title: "How to be Successful",
-                            content: "http://cnn.com"
-                        },
-                        {
-                            title: "How to be Successful",
+                            title: "MSNBC",
                             content: "http://msnbc.com"
                         },
                         {
