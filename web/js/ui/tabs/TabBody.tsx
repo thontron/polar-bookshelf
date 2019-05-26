@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Tab} from './TabNav';
 import {TabStyles} from './TabStyles';
+import {ReactWebview} from './ReactWebview';
 
 export class TabBody extends React.Component<IProps, IState> {
 
@@ -22,10 +23,10 @@ export class TabBody extends React.Component<IProps, IState> {
                             disablewebsecurity
                             autosize
                             nodeintegration
-                            // style={{
-                            //     width: '100%',
-                            //     height: '100%'
-                            // }}
+                                 // style={{
+                                 //     width: '100%',
+                                 //     height: '100%'
+                                 // }}
                             style={TabStyles.WEBVIEW}
                             src={tab.content}></webview>;
 
@@ -47,9 +48,3 @@ interface IProps {
 interface IState {
 }
 
-
-declare namespace JSX {
-    interface IntrinsicElements {
-        webview: any;
-    }
-}
