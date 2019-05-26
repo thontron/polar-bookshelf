@@ -13,6 +13,8 @@ export class TabBody extends React.Component<IProps, IState> {
 
         const {tab} = this.props;
 
+        const trueAsStr = 'true' as any;
+
         if (typeof tab.content === 'string') {
 
             // return <webview id={'tab-webview-' + tab.id}
@@ -20,9 +22,9 @@ export class TabBody extends React.Component<IProps, IState> {
             //                 src={tab.content}/>;
 
             return <webview id={'tab-webview-' + tab.id}
-                            disablewebsecurity
-                            autosize
-                            nodeintegration
+                            disablewebsecurity={trueAsStr}
+                            autosize={trueAsStr}
+                            nodeintegration={trueAsStr}
                                  // style={{
                                  //     width: '100%',
                                  //     height: '100%'
